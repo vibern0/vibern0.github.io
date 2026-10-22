@@ -118,6 +118,18 @@ h1 {
   line-height: 1.65;
 }
 
+.contact {
+  margin-top: 24px;
+}
+
+.availability {
+  max-width: 620px;
+  margin: 0 0 18px;
+  color: var(--muted);
+  font-size: 0.875rem;
+  line-height: 1.7;
+}
+
 .section-links {
   display: flex;
   flex-wrap: wrap;
@@ -198,7 +210,6 @@ h1 {
 }
 
 .project-summary,
-.project-focus,
 .notes-body p {
   max-width: 660px;
   font-size: 0.9375rem;
@@ -208,10 +219,6 @@ h1 {
 .project-summary {
   margin: 14px 0 0;
   color: var(--muted);
-}
-
-.project-focus {
-  margin: 14px 0 0;
 }
 
 .project-stack {
@@ -312,18 +319,10 @@ h1 {
 }
 
 .footer p {
-  margin: 52px 0 0;
+  margin: 0;
   color: var(--soft);
   font-size: 0.75rem;
   line-height: 1.5;
-}
-
-.footer .availability {
-  max-width: 620px;
-  margin: 0 0 24px;
-  color: var(--muted);
-  font-size: 0.875rem;
-  line-height: 1.7;
 }
 
 .visually-hidden {
@@ -384,8 +383,7 @@ h1 {
     padding-bottom: 28px;
   }
 
-  .project-summary,
-  .project-focus {
+  .project-summary {
     font-size: 0.875rem;
   }
 
@@ -413,7 +411,4 @@ h1 {
     font-size: 0.875rem;
   }
 
-  .footer p {
-    margin-top: 40px;
-  }
 }
