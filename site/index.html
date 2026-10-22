@@ -4,13 +4,13 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="#f1f4ee">
-    <meta name="description" content="Bernardo Vieira is a senior full-stack engineer at Gnosis and former co-founder and CTO of impactMarket.">
+    <meta name="description" content="Bernardo Vieira, senior full-stack engineer in Porto. Building web and mobile products. Previously at Gnosis; impactMarket co-founder and former CTO.">
     <meta property="og:type" content="website">
     <meta property="og:title" content="Bernardo Vieira — Full-stack engineer">
-    <meta property="og:description" content="Senior full-stack engineer at Gnosis. Former co-founder and CTO of impactMarket.">
+    <meta property="og:description" content="Web and mobile products, from the interface to the systems behind it. Senior full-stack engineer in Porto. Previously at Gnosis; impactMarket co-founder.">
     <title>Bernardo Vieira — Full-stack engineer</title>
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="styles.css?v=20261021-2">
   </head>
   <body>
     <main class="page">
@@ -22,29 +22,140 @@
       <section class="hero" aria-labelledby="name">
         <p class="eyebrow">hello, I’m</p>
         <h1 id="name">Bernardo<span class="cursor" aria-hidden="true">_</span></h1>
-        <p class="role">Senior full-stack engineer at Gnosis. Former co-founder &amp; CTO of impactMarket.</p>
+        <p class="role">Senior full-stack engineer. Previously at Gnosis. Co-founder &amp; former CTO of impactMarket.</p>
         <p class="intro">I build the parts people see and the systems they don’t.</p>
+        <nav class="section-links" aria-label="On this page">
+          <a href="#projects">recent projects <span aria-hidden="true">↓</span></a>
+          <a href="#experience">experience <span aria-hidden="true">↓</span></a>
+          <a href="mailto:blvieira5@gmail.com">get in touch <span aria-hidden="true">↗</span></a>
+        </nav>
       </section>
 
-      <section class="work" aria-labelledby="work-title">
-        <h2 id="work-title" class="visually-hidden">Selected work</h2>
+      <section class="projects" id="projects" aria-labelledby="projects-title">
+        <div class="section-heading">
+          <h2 id="projects-title">Recent projects</h2>
+          <p>Things I’ve been building.</p>
+        </div>
+
+        <article class="project" id="kettigo" aria-labelledby="kettigo-title">
+          <p class="work-index">01 / web</p>
+          <div class="project-content">
+            <div class="project-heading">
+              <h3 id="kettigo-title">Kettigo</h3>
+              <span class="project-status">Sepolia prototype</span>
+            </div>
+            <p class="project-summary">A prize-linked savings app with passkey accounts and encrypted balances.</p>
+            <p class="project-focus">Making a complex financial flow feel straightforward.</p>
+            <p class="project-stack">Next.js · TypeScript · Solidity · Safe · Zama</p>
+            <nav class="project-links" aria-label="Kettigo links">
+              <a href="https://app.kettigo.xyz">try the app <span aria-hidden="true">↗</span></a>
+              <a href="https://github.com/vibern0/kettigo">source <span aria-hidden="true">↗</span></a>
+            </nav>
+            <details class="project-notes">
+              <summary>A closer look</summary>
+              <div class="notes-body">
+                <p>The interface has to make account creation, transaction progress and withdrawal delays understandable. Behind those flows are passkey-controlled Safe accounts, encrypted balances and onchain draws.</p>
+                <p>The current version runs on Ethereum Sepolia. It’s a working prototype with test assets and limits.</p>
+              </div>
+            </details>
+          </div>
+        </article>
+
+        <article class="project" id="task-cycle" aria-labelledby="task-cycle-title">
+          <p class="work-index">02 / everyday</p>
+          <div class="project-content">
+            <div class="project-heading">
+              <h3 id="task-cycle-title">Task Cycle</h3>
+              <span class="project-status">Personal project</span>
+            </div>
+            <p class="project-summary">A small app for recurring chores. The clock restarts when you actually finish a task, so the schedule follows real life.</p>
+            <p class="project-focus">One simple rule, carried through reminders, history and offline storage.</p>
+            <p class="project-stack">React · TypeScript · Capacitor · PWA</p>
+            <details class="project-notes">
+              <summary>A closer look</summary>
+              <div class="notes-body">
+                <p>Finish a three-day chore on Tuesday and it’s due on Friday. Finish it late on Sunday and the next date moves to Wednesday. Editing a completion in your history updates the schedule too.</p>
+                <p>Tasks stay on the device. The app includes native reminders, import and export, and Portuguese and English interfaces.</p>
+              </div>
+            </details>
+          </div>
+        </article>
+
+        <article class="project" id="safe-guard" aria-labelledby="safe-guard-title">
+          <p class="work-index">03 / research</p>
+          <div class="project-content">
+            <div class="project-heading">
+              <h3 id="safe-guard-title">Safe spending guard</h3>
+              <span class="project-status">Testnet research</span>
+            </div>
+            <p class="project-summary">A personal vault that gives small everyday transfers a simpler path, while larger transfers require extra approval or a cancellable delay.</p>
+            <p class="project-focus">Making the consequences clear before you sign.</p>
+            <p class="project-stack">React · TypeScript · Solidity · Safe · WebAuthn</p>
+            <nav class="project-links" aria-label="Safe spending guard links">
+              <a href="https://github.com/vibern0/recent-tx-safe-guard">source &amp; research <span aria-hidden="true">↗</span></a>
+            </nav>
+            <details class="project-notes">
+              <summary>A closer look</summary>
+              <div class="notes-body">
+                <p>The interface explains which spending tier a transfer falls into, the approval it needs and when it can execute. The policy is enforced through Safe guards and a delay module.</p>
+                <p>This is an unaudited research prototype on a test network. The current browser implementation uses a local backend for provisioning and submissions.</p>
+              </div>
+            </details>
+          </div>
+        </article>
+      </section>
+
+      <section class="work" id="experience" aria-labelledby="work-title">
+        <div class="section-heading">
+          <h2 id="work-title">Experience</h2>
+          <p>Previously, with teams.</p>
+        </div>
         <article class="work-item">
-          <p class="work-index">01 / now</p>
+          <p class="work-index">01 / previously</p>
           <div>
             <h3>Gnosis</h3>
-            <p>Built Gnosis Pay cashback from scratch. I also work on Gnosis App and blockchain indexing.</p>
+            <p class="experience-role">Full-stack engineer</p>
+            <p class="experience-summary">Built the cashback system for Gnosis Pay users from scratch, alongside work on Gnosis App and blockchain indexing infrastructure.</p>
+            <ul class="experience-details">
+              <li>Built and maintained Envio indexers for wallet activity and Circles protocol events.</li>
+              <li>Integrated Circles smart contracts and implemented balance calculations that account for demurrage.</li>
+              <li>Developed Gnosis App frontend features in Svelte and built internal support tools.</li>
+            </ul>
           </div>
         </article>
         <article class="work-item">
-          <p class="work-index">02 / before</p>
+          <p class="work-index">02 / 2020–2024</p>
           <div>
             <h3>impactMarket</h3>
-            <p>Co-founded and led engineering hands-on. Its UBI protocol reached 45k+ people in about 30 countries and distributed $3M+ on-chain.</p>
+            <p class="experience-role">Co-founder &amp; CTO</p>
+            <p class="experience-summary">Led engineering, architecture and implementation across UBI, Microcredit, Libera Wallet and Learn &amp; Earn, contributing hands-on across the stack.</p>
+            <ul class="experience-details">
+              <li>Designed and built Solidity contracts and Node.js/TypeScript backends with PostgreSQL.</li>
+              <li>Built React and React Native applications, The Graph indexers, and operated Celo validator infrastructure.</li>
+            </ul>
+            <p class="experience-impact">The platform reached 45k+ UBI beneficiaries across about 30 countries, distributed $3M+ on-chain and processed 1M+ blockchain transfers.</p>
+          </div>
+        </article>
+        <article class="work-item">
+          <p class="work-index">03 / 2018–2020</p>
+          <div>
+            <h3>Tech HQ</h3>
+            <p class="experience-role">Blockchain developer</p>
+            <p class="experience-summary">Delivered full-stack Ethereum applications for clients using Solidity, JavaScript/TypeScript and React. Built and contributed to open-source contract libraries and application starter tools.</p>
+          </div>
+        </article>
+        <article class="work-item">
+          <p class="work-index">04 / 2017–2018</p>
+          <div>
+            <h3>Altice Labs</h3>
+            <p class="experience-role">Software quality assurance tester</p>
+            <p class="experience-summary">Software testing with Java and Cucumber.</p>
           </div>
         </article>
       </section>
 
-      <footer class="footer">
+      <footer class="footer" id="contact">
+        <p class="availability">Based in Porto. Open to full-stack/backend roles, remote, up to UTC-4 and UTC+2.</p>
         <nav class="links" aria-label="Find me online">
           <a href="mailto:blvieira5@gmail.com">email ↗</a>
           <a href="https://github.com/vibern0">github ↗</a>

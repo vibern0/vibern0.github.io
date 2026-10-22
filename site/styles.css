@@ -14,6 +14,7 @@
 
 html {
   font-size: 16px;
+  scroll-padding-top: 24px;
 }
 
 body {
@@ -117,18 +118,145 @@ h1 {
   line-height: 1.65;
 }
 
+.section-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 24px;
+  margin-top: 28px;
+  font-size: 0.8125rem;
+  line-height: 1.6;
+}
+
+.projects,
 .work {
   max-width: 880px;
   margin-top: clamp(68px, 9vh, 112px);
-  border-top: 1px dashed var(--line);
 }
 
+.section-heading {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px 24px;
+  padding-bottom: 18px;
+  border-bottom: 1px dashed var(--line);
+}
+
+.section-heading h2 {
+  margin: 0;
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+.section-heading p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.75rem;
+  line-height: 1.5;
+}
+
+.project,
 .work-item {
   display: grid;
   grid-template-columns: 132px minmax(0, 1fr);
   gap: 18px;
   padding: 25px 0 27px;
   border-bottom: 1px dashed var(--line);
+}
+
+.project {
+  padding-top: 32px;
+  padding-bottom: 34px;
+}
+
+.project-content {
+  min-width: 0;
+}
+
+.project-heading {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+}
+
+.project-heading h3 {
+  margin: 0;
+  font-size: clamp(1.35rem, 2.5vw, 1.75rem);
+  font-weight: 500;
+  letter-spacing: -0.04em;
+  line-height: 1.3;
+}
+
+.project-status {
+  color: var(--muted);
+  font-size: 0.6875rem;
+  line-height: 1.6;
+}
+
+.project-summary,
+.project-focus,
+.notes-body p {
+  max-width: 660px;
+  font-size: 0.9375rem;
+  line-height: 1.7;
+}
+
+.project-summary {
+  margin: 14px 0 0;
+  color: var(--muted);
+}
+
+.project-focus {
+  margin: 14px 0 0;
+}
+
+.project-stack {
+  margin: 16px 0 0;
+  color: var(--muted);
+  font-size: 0.6875rem;
+  line-height: 1.8;
+}
+
+.project-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 24px;
+  margin-top: 18px;
+  font-size: 0.8125rem;
+  line-height: 1.6;
+}
+
+.project-notes {
+  margin-top: 20px;
+}
+
+.project-notes summary {
+  width: fit-content;
+  padding: 4px 0;
+  color: var(--link);
+  cursor: pointer;
+  font-size: 0.75rem;
+  line-height: 1.6;
+}
+
+.project-notes summary:focus-visible {
+  outline: 2px solid var(--link);
+  outline-offset: 5px;
+}
+
+.notes-body {
+  padding-left: 14px;
+  border-left: 1px solid var(--line);
+}
+
+.notes-body p {
+  margin: 14px 0 0;
+  color: var(--muted);
+  font-size: 0.8125rem;
 }
 
 .work-index {
@@ -145,12 +273,29 @@ h1 {
   line-height: 1.45;
 }
 
-.work-item p:last-child {
-  max-width: 660px;
+.experience-role {
   margin: 6px 0 0;
   color: var(--muted);
-  font-size: 0.9375rem;
+  font-size: 0.75rem;
   line-height: 1.6;
+}
+
+.experience-summary,
+.experience-impact,
+.experience-details {
+  max-width: 660px;
+  margin: 14px 0 0;
+  color: var(--muted);
+  font-size: 0.9375rem;
+  line-height: 1.7;
+}
+
+.experience-details {
+  padding-left: 19px;
+}
+
+.experience-details li + li {
+  margin-top: 8px;
 }
 
 .footer {
@@ -171,6 +316,14 @@ h1 {
   color: var(--soft);
   font-size: 0.75rem;
   line-height: 1.5;
+}
+
+.footer .availability {
+  max-width: 620px;
+  margin: 0 0 24px;
+  color: var(--muted);
+  font-size: 0.875rem;
+  line-height: 1.7;
 }
 
 .visually-hidden {
@@ -213,14 +366,27 @@ h1 {
     font-size: 0.9375rem;
   }
 
+  .projects,
   .work {
     margin-top: 60px;
   }
 
+  .project,
   .work-item {
     grid-template-columns: 1fr;
     gap: 6px;
     padding: 21px 0 23px;
+  }
+
+  .project {
+    gap: 12px;
+    padding-top: 26px;
+    padding-bottom: 28px;
+  }
+
+  .project-summary,
+  .project-focus {
+    font-size: 0.875rem;
   }
 
   .work-index {
@@ -232,7 +398,9 @@ h1 {
     font-size: 1rem;
   }
 
-  .work-item p:last-child {
+  .experience-summary,
+  .experience-impact,
+  .experience-details {
     font-size: 0.875rem;
   }
 
