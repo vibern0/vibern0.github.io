@@ -25,9 +25,9 @@ function initializeTimeline() {
   let activeIndex = Math.max(0, stops.findIndex((stop) => stop.hasAttribute('data-initial')));
   let frame = 0;
 
-  function selectMilestone(index, keepPosition = true) {
+  function selectMilestone(index, keepPosition = true, toggle = false) {
     const previousTop = buttons[index].getBoundingClientRect().top;
-    activeIndex = index;
+    activeIndex = toggle && activeIndex === index ? -1 : index;
 
     buttons.forEach((button, current) => {
       const selected = current === activeIndex;
@@ -60,7 +60,7 @@ function initializeTimeline() {
   }
 
   buttons.forEach((button, index) => {
-    button.addEventListener('click', () => selectMilestone(index));
+    button.addEventListener('click', () => selectMilestone(index, true, true));
     button.addEventListener('keydown', (event) => {
       if (!keyboardKeys.has(event.key)) return;
       event.preventDefault();

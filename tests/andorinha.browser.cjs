@@ -69,8 +69,8 @@ const base = process.env.PORTFOLIO_URL || 'http://localhost:4173/';
 
     await check('Birds cannot intercept page links or timeline controls', async () => {
       assert.equal(await main.locator('.andorinha-sky').evaluate((element) => getComputedStyle(element).pointerEvents), 'none');
-      await main.locator('#gnosis-trigger').click();
-      assert.equal(await main.locator('#gnosis-panel').isVisible(), true);
+      await main.locator('#impactmarket-trigger').click();
+      assert.equal(await main.locator('#impactmarket-panel').isVisible(), true);
     });
 
     await check('Enabling reduced motion immediately cancels active birds', async () => {

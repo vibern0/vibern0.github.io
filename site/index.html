@@ -11,9 +11,9 @@
     <title>Bernardo Vieira — Full-stack engineer</title>
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <link rel="preload" as="image" href="assets/porto.webp">
-    <link rel="stylesheet" href="styles.css?v=20261022-2">
+    <link rel="stylesheet" href="styles.css?v=20261023-1">
     <link rel="stylesheet" href="andorinha.css?v=20261022-1">
-    <script type="module" src="timeline.mjs?v=20261022-2"></script>
+    <script type="module" src="timeline.mjs?v=20261027-1"></script>
     <script type="module" src="andorinha.mjs?v=20261022-1"></script>
   </head>
   <body>
@@ -39,18 +39,17 @@
             <a href="mailto:blvieira5@gmail.com">email <span aria-hidden="true">↗</span></a>
             <a href="https://github.com/vibern0">github <span aria-hidden="true">↗</span></a>
             <a href="https://www.linkedin.com/in/vibern/">linkedin <span aria-hidden="true">↗</span></a>
+            <a href="https://x.com/vibern0" aria-label="Find me on X, formerly Twitter">x <span aria-hidden="true">↗</span></a>
           </nav>
         </div>
         <figure class="porto">
           <img src="assets/porto.webp" width="1536" height="1024" fetchpriority="high" alt="A pen drawing of Porto’s Ribeira, the Douro river and the Dom Luís I bridge.">
-          <figcaption>Porto, Portugal <span aria-hidden="true">↗</span></figcaption>
         </figure>
       </section>
 
       <section class="experience" id="experience" aria-labelledby="experience-title">
         <div class="section-heading">
           <h2 id="experience-title">From commit to impact</h2>
-          <p>A few stops along the way.</p>
         </div>
         <div class="timeline" data-timeline>
           <div class="timeline-rail" aria-hidden="true">
@@ -59,28 +58,54 @@
           </div>
 
           <div class="timeline-stop" data-stop>
-            <button class="milestone" type="button" id="tech-hq-trigger" aria-controls="tech-hq-panel" aria-expanded="true">
+            <button class="milestone" type="button" id="now-trigger" aria-controls="now-panel" aria-expanded="true">
               <span class="milestone-dot" aria-hidden="true"></span>
-              <span class="milestone-name"><span class="milestone-index">01 /</span> Tech HQ</span>
-              <span class="milestone-caption">Ethereum applications</span>
+              <span class="milestone-name"><span class="milestone-index">04 /</span> Building now</span>
+              <span class="milestone-caption">Kettigo · Task Cycle</span>
             </button>
-            <div class="career-panel" id="tech-hq-panel" role="region" aria-labelledby="tech-hq-trigger">
+            <div class="career-panel" id="now-panel" role="region" aria-labelledby="now-trigger">
               <div class="career-main">
                 <span class="career-icon" aria-hidden="true">
-                  <svg viewBox="0 0 48 48" fill="none"><path d="m17 14-10 10 10 10m14-20 10 10-10 10M28 9l-8 30" /></svg>
+                  <svg viewBox="0 0 48 48" fill="none"><path d="M24 5v38M5 24h38M11 11l26 26M11 37l26-26" /></svg>
                 </span>
                 <div>
-                  <p class="career-date">2018–2020</p>
-                  <h3>Tech HQ</h3>
-                  <p class="career-role">Blockchain developer</p>
-                  <p>Delivered full-stack Ethereum applications for clients, from the interface to the contracts underneath.</p>
-                  <p class="career-stack">Solidity · JavaScript / TypeScript · React</p>
+                  <p class="career-date">These days</p>
+                  <h3>Building now</h3>
+                  <p class="career-role">Independent projects</p>
+                  <p>Passkey accounts, encrypted savings, recurring chores and safer spending policies. Small products with interesting problems underneath.</p>
+                  <a class="text-link" href="#projects">Explore the projects <span aria-hidden="true">↓</span></a>
                 </div>
               </div>
               <div class="career-aside">
-                <p class="small-label">The work</p>
-                <p>Built and contributed to open-source contract libraries and application starter tools.</p>
-                <p class="earlier-role">Before that: software QA at Altice Labs, 2017–2018. Java &amp; Cucumber.</p>
+                <p class="small-label">What’s next</p>
+                <p>Open to full-stack/backend roles. Remote, up to UTC−4 and UTC+2.</p>
+                <a class="text-link" href="mailto:blvieira5@gmail.com">Let’s talk <span aria-hidden="true">↗</span></a>
+              </div>
+            </div>
+          </div>
+
+          <div class="timeline-stop" data-stop data-initial>
+            <button class="milestone" type="button" id="gnosis-trigger" aria-controls="gnosis-panel" aria-expanded="true">
+              <span class="milestone-dot" aria-hidden="true"></span>
+              <span class="milestone-name"><span class="milestone-index">03 /</span> Gnosis</span>
+              <span class="milestone-caption">Apps &amp; indexing</span>
+            </button>
+            <div class="career-panel" id="gnosis-panel" role="region" aria-labelledby="gnosis-trigger">
+              <div class="career-main">
+                <span class="career-icon" aria-hidden="true">
+                  <svg viewBox="0 0 48 48" fill="none"><circle cx="17" cy="18" r="8" /><circle cx="32" cy="18" r="8" /><path d="M10 31c6 12 23 12 29 0M17 18h.01M32 18h.01" /></svg>
+                </span>
+                <div>
+                  <p class="career-date">2024–2026</p>
+                  <h3>Gnosis</h3>
+                  <p class="career-role">Full-stack engineer</p>
+                  <p>Built the cashback system for Gnosis Pay users from scratch, alongside work on Gnosis App and blockchain indexing infrastructure.</p>
+                  <p class="career-stack">Svelte · TypeScript · Envio · Circles</p>
+                </div>
+              </div>
+              <div class="career-aside">
+                <p class="small-label">Across the stack</p>
+                <p>Wallet activity and Circles indexers, smart-contract integrations, demurrage-aware balances, frontend features and internal support tools.</p>
               </div>
             </div>
           </div>
@@ -120,54 +145,28 @@
           </div>
 
           <div class="timeline-stop" data-stop>
-            <button class="milestone" type="button" id="gnosis-trigger" aria-controls="gnosis-panel" aria-expanded="true">
+            <button class="milestone" type="button" id="tech-hq-trigger" aria-controls="tech-hq-panel" aria-expanded="true">
               <span class="milestone-dot" aria-hidden="true"></span>
-              <span class="milestone-name"><span class="milestone-index">03 /</span> Gnosis</span>
-              <span class="milestone-caption">Apps &amp; indexing</span>
+              <span class="milestone-name"><span class="milestone-index">01 /</span> Tech HQ</span>
+              <span class="milestone-caption">Ethereum applications</span>
             </button>
-            <div class="career-panel" id="gnosis-panel" role="region" aria-labelledby="gnosis-trigger">
+            <div class="career-panel" id="tech-hq-panel" role="region" aria-labelledby="tech-hq-trigger">
               <div class="career-main">
                 <span class="career-icon" aria-hidden="true">
-                  <svg viewBox="0 0 48 48" fill="none"><circle cx="17" cy="18" r="8" /><circle cx="32" cy="18" r="8" /><path d="M10 31c6 12 23 12 29 0M17 18h.01M32 18h.01" /></svg>
+                  <svg viewBox="0 0 48 48" fill="none"><path d="m17 14-10 10 10 10m14-20 10 10-10 10M28 9l-8 30" /></svg>
                 </span>
                 <div>
-                  <p class="career-date">Previously</p>
-                  <h3>Gnosis</h3>
-                  <p class="career-role">Full-stack engineer</p>
-                  <p>Built the cashback system for Gnosis Pay users from scratch, alongside work on Gnosis App and blockchain indexing infrastructure.</p>
-                  <p class="career-stack">Svelte · TypeScript · Envio · Circles</p>
+                  <p class="career-date">2018–2020</p>
+                  <h3>Tech HQ</h3>
+                  <p class="career-role">Blockchain developer</p>
+                  <p>Delivered full-stack Ethereum applications for clients, from the interface to the contracts underneath.</p>
+                  <p class="career-stack">Solidity · JavaScript / TypeScript · React</p>
                 </div>
               </div>
               <div class="career-aside">
-                <p class="small-label">Across the stack</p>
-                <p>Wallet activity and Circles indexers, smart-contract integrations, demurrage-aware balances, frontend features and internal support tools.</p>
-              </div>
-            </div>
-          </div>
-
-          <div class="timeline-stop" data-stop data-initial>
-            <button class="milestone" type="button" id="now-trigger" aria-controls="now-panel" aria-expanded="true">
-              <span class="milestone-dot" aria-hidden="true"></span>
-              <span class="milestone-name"><span class="milestone-index">04 /</span> Building now</span>
-              <span class="milestone-caption">Kettigo · Task Cycle</span>
-            </button>
-            <div class="career-panel" id="now-panel" role="region" aria-labelledby="now-trigger">
-              <div class="career-main">
-                <span class="career-icon" aria-hidden="true">
-                  <svg viewBox="0 0 48 48" fill="none"><path d="M24 5v38M5 24h38M11 11l26 26M11 37l26-26" /></svg>
-                </span>
-                <div>
-                  <p class="career-date">These days</p>
-                  <h3>Building now</h3>
-                  <p class="career-role">Independent projects</p>
-                  <p>Passkey accounts, encrypted savings, recurring chores and safer spending policies. Small products with interesting problems underneath.</p>
-                  <a class="text-link" href="#projects">Explore the projects <span aria-hidden="true">↓</span></a>
-                </div>
-              </div>
-              <div class="career-aside">
-                <p class="small-label">What’s next</p>
-                <p>Open to full-stack/backend roles. Remote, up to UTC−4 and UTC+2.</p>
-                <a class="text-link" href="mailto:blvieira5@gmail.com">Let’s talk <span aria-hidden="true">↗</span></a>
+                <p class="small-label">The work</p>
+                <p>Built and contributed to open-source contract libraries and application starter tools.</p>
+                <p class="earlier-role">Before that: software QA at Altice Labs, 2017–2018. Java &amp; Cucumber.</p>
               </div>
             </div>
           </div>
@@ -239,7 +238,7 @@
 
       <footer class="footer" id="contact">
         <div><p class="footer-invitation">Have something in mind? <a href="mailto:blvieira5@gmail.com">Let’s talk <span aria-hidden="true">↗</span></a></p><p>Open to full-stack/backend roles · remote · UTC−4 to UTC+2.</p></div>
-        <div class="footer-corner"><p>a small corner of the web.</p><a href="https://x.com/vibern0" aria-label="Find me on X, formerly Twitter">x <span aria-hidden="true">↗</span></a></div>
+        <div class="footer-corner"><p>a small corner of the web.</p></div>
       </footer>
     </main>
   </body>

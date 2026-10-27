@@ -90,8 +90,6 @@ h1 {
 .links a { padding: 5px 0; }
 .porto { position: relative; align-self: stretch; display: flex; align-items: center; margin: 0 -20px 0 -16px; min-width: 0; }
 .porto img { display: block; width: 100%; height: auto; mix-blend-mode: multiply; }
-.porto figcaption { position: absolute; right: 28px; top: 26px; color: var(--soft); font-size: 10px; letter-spacing: 0.015em; }
-.porto figcaption span { padding-left: 8px; }
 
 .section-heading { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 8px 20px; }
 .section-heading h2 { margin: 0; font-size: 13px; font-weight: 600; }
@@ -208,7 +206,6 @@ h1 {
 .footer .footer-invitation { color: var(--muted); font-size: 12px; margin-bottom: 8px; }
 .footer-invitation a { white-space: nowrap; }
 .footer-corner { text-align: right; }
-.footer-corner > a { display: inline-block; margin-top: 8px; padding: 3px 0; font-size: 11px; }
 
 @media (max-width: 900px) and (min-width: 701px) {
   .page { padding-inline: 32px; }
@@ -241,16 +238,14 @@ h1 {
   .intro { margin-top: 21px; font-size: 14px; line-height: 1.8; max-width: 430px; }
   .desktop-break { display: none; }
   .credentials { margin-top: 16px; font-size: 12px; line-height: 1.8; }
-  .links { margin-top: 17px; justify-content: flex-start; gap: 8px 25px; font-size: 13px; }
-  .links a { display: inline-flex; gap: 8px; align-items: center; min-height: 44px; }
+  .links { margin-top: 17px; justify-content: space-between; gap: 8px 12px; font-size: 13px; }
+  .links a { display: inline-flex; gap: 8px; align-items: center; min-width: 44px; min-height: 44px; }
   .porto { margin: -8px -8px -5px; align-self: auto; justify-content: center; }
   .porto img { width: 100%; max-width: 480px; }
-  .porto figcaption { right: 12px; top: 36px; font-size: 9px; }
   .experience { padding-top: 19px; }
   .section-heading h2 { font-size: 12px; }
   .section-heading p { font-size: 10px; }
   .experience > .section-heading { align-items: flex-start; }
-  .experience > .section-heading p { max-width: 105px; text-align: right; line-height: 1.6; }
   .timeline { margin-top: 29px; }
   .timeline.is-enhanced { display: block; }
   .is-enhanced .timeline-stop { display: grid; position: relative; grid-template-columns: 30px minmax(0, 1fr); margin: 0; padding: 0 0 26px; }
@@ -305,13 +300,11 @@ h1 {
   .footer .footer-invitation { font-size: 12px; }
   .footer p { font-size: 9px; line-height: 1.9; }
   .footer-corner { display: flex; align-items: center; justify-content: space-between; text-align: left; }
-  .footer-corner > a { margin-top: 0; min-height: 44px; display: inline-flex; align-items: center; }
 }
 
 @media (max-width: 360px) {
   .page { padding-inline: 20px; }
   .location { font-size: 9px; }
-  .links { gap: 8px 19px; }
   .career-panel { padding: 17px 14px; }
   .impact-numbers dt { font-size: 26px; }
   .career-panel h3 { font-size: 21px; }
