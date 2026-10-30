@@ -12,7 +12,7 @@
 
 ## Global Constraints
 
-- Preserve the current buildless HTML/CSS/JavaScript architecture and add no dependency.
+- Preserve the current buildless HTML/CSS/JavaScript architecture and add no production dependency.
 - Preserve the Porto illustration, sage/forest palette, four-stop timeline, and existing timeline interaction model.
 - Do not add or expand Altice Labs experience; preserve its existing compact historical note only.
 - Do not reproduce the full CV or LinkedIn profile.
@@ -237,6 +237,10 @@ git commit -m "feat: refresh portfolio projects"
 ### Task 4: Browser regression proof and visual repair
 
 **Files:**
+- Create: `package.json`
+- Create: `package-lock.json`
+- Modify: `.gitignore`
+- Modify: `tests/portfolio-content.test.mjs`
 - Modify: `output/qa/check-portfolio.cjs`
 - Modify if needed: `site/index.html`
 - Modify if needed: `site/styles.css`
@@ -259,15 +263,13 @@ Add checks to `output/qa/check-portfolio.cjs` asserting:
 - no-JavaScript mode shows all four career panels and both evidence links;
 - existing keyboard, reduced-motion, and runtime-error checks still pass.
 
-- [ ] **Step 2: Serve the site and run all automated proof**
+- [ ] **Step 2: Install versioned QA tooling and run all automated proof**
 
-Run in one terminal: `python3 -m http.server 4173 --directory site`
+Run once after checkout: `npm install && npm run test:setup`
 
-Run: `node --test tests/portfolio-content.test.mjs tests/timeline.test.mjs tests/andorinha.test.mjs`
+Run: `npm test`
 
-Run: `PORTFOLIO_URL=http://localhost:4173/ node output/qa/check-portfolio.cjs`
-
-Expected: all Node and Playwright checks PASS with no page errors or overflow.
+Expected: all Node and Playwright checks PASS with no page errors or overflow. The committed test starts its own local server and covers rendered content, local image loading, responsive widths, keyboard interaction, reduced motion, and the no-JavaScript fallback.
 
 - [ ] **Step 3: Verify public destinations**
 

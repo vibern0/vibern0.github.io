@@ -66,7 +66,7 @@ Use the existing timeline and project components as the only presentation seams.
 ## Implementation constraints
 
 - Continue using semantic HTML, existing CSS, and vanilla JavaScript.
-- Prefer additions to existing classes; add no dependency.
+- Add no production or runtime dependency. A versioned dev-only browser dependency is permitted for reproducible acceptance tests.
 - Preserve progressive enhancement: all role content and links remain available without JavaScript.
 - Media assets must be local, compressed, and explicitly sized to avoid layout shift.
 - External links should use clear labels and safe new-tab behavior only if the site already adopts it consistently; otherwise preserve current same-tab behavior.

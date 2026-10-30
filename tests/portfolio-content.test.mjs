@@ -19,6 +19,7 @@ const contentTypes = {
 let browser;
 let page;
 let server;
+let siteUrl;
 
 before(async () => {
   server = createServer(async (request, response) => {
@@ -39,7 +40,8 @@ before(async () => {
   browser = await chromium.launch();
   page = await browser.newPage();
   const address = server.address();
-  await page.goto(`http://127.0.0.1:${address.port}/`, { waitUntil: 'networkidle' });
+  siteUrl = `http://127.0.0.1:${address.port}/`;
+  await page.goto(siteUrl, { waitUntil: 'networkidle' });
 });
 
 after(async () => {
@@ -87,29 +89,37 @@ test('experience presents CV-backed outcomes, sources and role-specific stacks',
 
 test('impactMarket evidence stays local, descriptive and limited to two items', async () => {
   const impactPanel = page.locator('#impactmarket-panel');
+  if (!await impactPanel.isVisible()) await page.locator('#impactmarket-trigger').click();
   const cards = impactPanel.locator('.evidence-card');
   assert.equal(await cards.count(), 2);
   assert.deepEqual(await cards.evaluateAll((items) => items.map((item) => item.getAttribute('href'))), [
     'https://www.youtube.com/watch?v=jozKD2rQqxo',
     'https://www.youtube.com/watch?v=_4TemHnmRCE',
   ]);
+  await cards.locator('img').first().scrollIntoViewIfNeeded();
   assert.deepEqual(await cards.locator('img').evaluateAll((images) => images.map((image) => ({
     src: new URL(image.src).pathname,
     width: image.getAttribute('width'),
     height: image.getAttribute('height'),
     alt: image.getAttribute('alt'),
+    complete: image.complete,
+    naturalWidth: image.naturalWidth,
   }))), [
     {
       src: '/assets/impactmarket-jaguara.webp',
       width: '480',
       height: '360',
       alt: 'Residents of the Povoado de Jaguara UBI community in Brazil.',
+      complete: true,
+      naturalWidth: 480,
     },
     {
       src: '/assets/impactmarket-defi-for-people.webp',
       width: '480',
       height: '360',
       alt: 'impactMarket presentation for Celo’s DeFi for the People initiative.',
+      complete: true,
+      naturalWidth: 480,
     },
   ]);
 
@@ -139,4 +149,43 @@ test('projects expose the CV-backed proof, stacks and destinations', async () =>
     'articles/bounded-spending-vault.html',
   ]);
   assert.match((await guard.textContent()).replace(/\s+/g, ' '), /unaudited research prototype on a test network/);
+});
+
+test('expanded experience stays within phone, tablet and desktop viewports', async () => {
+  for (const width of [320, 390, 430, 700, 701, 768, 900, 1024, 1440]) {
+    await page.setViewportSize({ width, height: 844 });
+    await page.evaluate(() => new Promise((resolveFrame) => requestAnimationFrame(() => requestAnimationFrame(resolveFrame))));
+    if (!await page.locator('#impactmarket-panel').isVisible()) await page.locator('#impactmarket-trigger').click();
+    const dimensions = await page.evaluate(() => ({ viewport: innerWidth, content: document.documentElement.scrollWidth }));
+    assert.ok(dimensions.content <= dimensions.viewport, `Overflow at ${width}px: ${dimensions.content}px`);
+  }
+});
+
+test('timeline keyboard and reduced-motion behavior remains accessible', async () => {
+  await page.goto(siteUrl, { waitUntil: 'networkidle' });
+  await page.setViewportSize({ width: 390, height: 844 });
+  const impact = page.locator('#impactmarket-trigger');
+  await impact.scrollIntoViewIfNeeded();
+  await impact.focus();
+  await impact.press('End');
+  assert.equal(await page.evaluate(() => document.activeElement.id), 'tech-hq-trigger');
+  assert.equal(await page.locator('#tech-hq-panel').isVisible(), true);
+
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.evaluate(() => new Promise((resolveFrame) => requestAnimationFrame(resolveFrame)));
+  assert.equal(await page.locator('.rail-pulse').isVisible(), false);
+  await page.locator('#gnosis-trigger').click();
+  assert.equal(await page.locator('#gnosis-panel').isVisible(), true);
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
+});
+
+test('experience and evidence remain available without JavaScript', async () => {
+  const noScript = await browser.newContext({ javaScriptEnabled: false, viewport: { width: 390, height: 844 } });
+  const plain = await noScript.newPage();
+  await plain.goto(siteUrl, { waitUntil: 'networkidle' });
+  assert.equal(await plain.locator('.career-panel:visible').count(), 4);
+  assert.equal(await plain.locator('#impactmarket-panel .evidence-card').count(), 2);
+  const dimensions = await plain.evaluate(() => ({ viewport: innerWidth, content: document.documentElement.scrollWidth }));
+  assert.ok(dimensions.content <= dimensions.viewport);
+  await noScript.close();
 });
