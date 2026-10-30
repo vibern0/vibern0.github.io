@@ -84,3 +84,36 @@ test('experience presents CV-backed outcomes, sources and role-specific stacks',
   assert.deepEqual(techHq.stack, ['Solidity', 'JavaScript', 'TypeScript', 'React', 'Hardhat']);
   assert.equal((await page.getByText('Altice Labs', { exact: false }).allTextContents()).length, 1);
 });
+
+test('impactMarket evidence stays local, descriptive and limited to two items', async () => {
+  const impactPanel = page.locator('#impactmarket-panel');
+  const cards = impactPanel.locator('.evidence-card');
+  assert.equal(await cards.count(), 2);
+  assert.deepEqual(await cards.evaluateAll((items) => items.map((item) => item.getAttribute('href'))), [
+    'https://www.youtube.com/watch?v=jozKD2rQqxo',
+    'https://www.youtube.com/watch?v=_4TemHnmRCE',
+  ]);
+  assert.deepEqual(await cards.locator('img').evaluateAll((images) => images.map((image) => ({
+    src: new URL(image.src).pathname,
+    width: image.getAttribute('width'),
+    height: image.getAttribute('height'),
+    alt: image.getAttribute('alt'),
+  }))), [
+    {
+      src: '/assets/impactmarket-jaguara.webp',
+      width: '480',
+      height: '360',
+      alt: 'Residents of the Povoado de Jaguara UBI community in Brazil.',
+    },
+    {
+      src: '/assets/impactmarket-defi-for-people.webp',
+      width: '480',
+      height: '360',
+      alt: 'impactMarket presentation for Celo’s DeFi for the People initiative.',
+    },
+  ]);
+
+  for (const panel of await page.locator('.career-panel').all()) {
+    assert.ok(await panel.locator('.evidence-card').count() <= 2);
+  }
+});
