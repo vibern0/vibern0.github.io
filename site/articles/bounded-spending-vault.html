@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#f1f4ee">
+    <meta name="author" content="Bernardo Vieira">
+    <meta name="description" content="Building a Safe vault with bounded daily spending, stronger authorization and cancellable delayed withdrawals. Policy design, Sepolia testing and what comes next.">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Building a self-custody vault with bounded spending">
+    <meta property="og:description" content="Onchain spending limits, cancellable withdrawals and testing a policy-constrained Safe on Sepolia.">
+    <title>Building a self-custody vault with bounded spending — Bernardo Vieira</title>
+    <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+    <link rel="stylesheet" href="../styles.css?v=20261023-1">
+    <link rel="stylesheet" href="../article.css?v=20261029-2">
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to article</a>
+    <div class="page article-page">
+      <header class="masthead">
+        <a class="home-link" href="../" aria-label="vibern home">vibern <span>/ home</span></a>
+        <span class="location">Porto, Portugal <span aria-hidden="true">✳</span></span>
+      </header>
+
+      <main id="main">
+        <article class="article" aria-labelledby="article-title">
+          <header class="article-header">
+            <p class="article-meta">Engineering notes <span aria-hidden="true">/</span> <time datetime="2026-10-29">29 Oct 2026</time></p>
+            <h1 id="article-title">Building a <span class="article-nowrap">self-custody</span> vault with bounded spending</h1>
+            <p class="article-author">By Bernardo Vieira</p>
+          </header>
+
+          <section aria-labelledby="the-problem">
+            <h2 id="the-problem">The problem</h2>
+            <p>A valid signature can authorize a catastrophic transaction. Hardware wallets protect keys, and multisig distributes approval, but neither automatically limits how much an approved transaction can move.</p>
+            <p>I want routine payments to remain convenient while larger withdrawals require stronger authorization and time to intervene. Those restrictions must survive a compromised interface: enforcing them in the frontend would provide little protection.</p>
+          </section>
+
+          <section aria-labelledby="how-were-fixing-it">
+            <h2 id="how-were-fixing-it">How we’re fixing it</h2>
+            <p>The vault holds assets in one Safe and enforces three tiers onchain:</p>
+            <ul class="article-tiers">
+              <li><strong>X:</strong> daily spending authorized by the primary passkey.</li>
+              <li><strong>Y:</strong> a shared daily ceiling for all immediate spending; step-up transactions require an additional signer.</li>
+              <li><strong>Z:</strong> a mandatory, cancellable delay for withdrawals exceeding the remaining immediate allowance.</li>
+            </ul>
+            <figure class="article-figure">
+              <a href="../assets/bounded-spending-vault.png">
+                <img src="../assets/bounded-spending-vault.png" width="1536" height="1024" loading="lazy" decoding="async" alt="One Safe, three spending rules: small payments within X and shared Y use a passkey; larger payments within shared Y add a second signer; withdrawals above remaining Y require both signers and delay Z, with an independent alert and the option to cancel with both factors. Base spending consumes X and shared Y; step-up spending consumes shared Y. Limits apply per asset, per day.">
+              </a>
+              <figcaption>One vault, three spending rules. <a href="../assets/bounded-spending-vault.png">View full-size diagram <span aria-hidden="true">↗</span></a></figcaption>
+            </figure>
+            <p>Base transfers consume both X and Y. Step-up transfers consume Y, preventing an attacker from stacking two independent allowances. Approvals bind the chain, Safe, recipient, amount, calldata, operation, and nonce.</p>
+            <p>A policy guard constrains both owner and module execution. Zodiac Delay provides the queue. Unsupported calls are rejected, security-weakening changes are delayed, and independent notifications provide an opportunity to cancel.</p>
+
+            <section aria-labelledby="testing-with-ai-agents">
+              <h3 id="testing-with-ai-agents">Testing with AI agents on Sepolia</h3>
+              <p>Agents implement adversarial tests, review changes, and exercise bounded transaction sequences against actual Sepolia deployments.</p>
+              <p>The tests check successful transfers alongside overspending, replay, altered signatures, cancellation, expiry, and counter rollback. Live execution additionally exposes RPC failures, competing funder transactions, confirmation delays, and interrupted submissions.</p>
+              <p>At the checkpoint, the scenario journal contained 15 successful live transactions. Two USDC payments demonstrated counters progressing from <code>10/10</code> to <code>10/20</code>, confirming that base and step-up transfers share Y. Notification evidence includes delivery and receiver acknowledgement.</p>
+              <p>This automates substantial repetitive work: constructing transactions, running regressions, polling receipts, checking counters, and assembling evidence. My work concentrates on policy decisions, bounded authorization, and reviewing discrepancies. Human hours saved have not been measured; the concrete scale is 610 passing regular tests and four passing invariant tests, plus live-chain verification. <a href="https://github.com/vibern0/recent-tx-safe-guard/blob/e9a1bafaebaebdd9f5d08ff4c77118bd226ca2b6/packages/security-core/docs/evidence/2026-10-29-paused-checkpoint.md">Checkpoint</a></p>
+            </section>
+          </section>
+
+          <section aria-labelledby="whats-next">
+            <h2 id="whats-next">What’s next</h2>
+            <p>The immediate gate is completing the remaining USDC, signer-rotation, cancellation, freeze, and notification scenarios. Two coverage failures and a pending fix review must also be resolved.</p>
+            <p>After that comes the planned client-only, sponsored ERC-4337 wallet. Its deployment, provider compatibility, browser signing, and recovery from interrupted submissions must preserve the same policy.</p>
+            <p>The intended outcome is a reproducible testnet vault with evidence that spending is bounded and larger withdrawals remain delayed and cancellable. Independent specialist review and a professional audit remain prerequisites for production.</p>
+          </section>
+
+          <footer class="article-footer">
+            <a href="../"><span aria-hidden="true">←</span> Back home</a>
+            <a href="mailto:blvieira5@gmail.com">Get in touch <span aria-hidden="true">↗</span></a>
+          </footer>
+        </article>
+      </main>
+    </div>
+  </body>
+</html>
