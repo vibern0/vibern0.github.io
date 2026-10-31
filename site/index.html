@@ -207,20 +207,58 @@
         <article class="project" id="kettigo" aria-labelledby="kettigo-title">
           <span class="project-icon" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none"><path d="M9 5v22m14-22L9 19m6-6 10 14" /></svg></span>
           <div class="project-content">
-            <div class="project-heading"><h3 id="kettigo-title">Kettigo</h3><span class="project-status">Sepolia prototype</span></div>
-            <p class="project-summary">A prize-linked savings app with passkey accounts and encrypted balances.</p>
+            <div class="project-heading"><h3 id="kettigo-title">Kettigo</h3><span class="project-status">Independent project · Ethereum Sepolia prototype</span></div>
+            <p class="project-summary">A mobile-first savings prototype using Zama FHE for encrypted balances and deposit-weighted prize draws.</p>
             <p class="project-stack">Next.js · TypeScript · Solidity · Safe · Zama</p>
             <details class="project-notes">
               <summary>A closer look</summary>
               <div class="notes-body">
-                <p>The mobile-first prototype combines confidential USDC balances with passkey-controlled Safe smart accounts, sponsored transactions and deposit-weighted prize draws.</p>
-                <p>It runs on Ethereum Sepolia with automated withdrawal processing, test assets and prototype limits.</p>
+                <p>Integrated confidential USDC, passkey-controlled Safe smart accounts and sponsored transactions, with automated withdrawal processing.</p>
+                <p>The prototype runs on Ethereum Sepolia with test assets and prototype limits.</p>
               </div>
             </details>
           </div>
           <nav class="project-links" aria-label="Kettigo links">
             <a href="https://app.kettigo.xyz">try the app <span aria-hidden="true">↗</span></a>
             <a href="https://github.com/vibern0/kettigo">source <span aria-hidden="true">↗</span></a>
+          </nav>
+        </article>
+
+        <article class="project" id="tiered-spending-guard" aria-labelledby="tiered-spending-guard-title">
+          <span class="project-icon" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none"><path d="m16 3 11 5v8c0 6-5 10-11 13C10 26 5 22 5 16V8L16 3Z" /><path d="m11 16 3 3 7-7" /></svg></span>
+          <div class="project-content">
+            <div class="project-heading"><h3 id="tiered-spending-guard-title">Tiered spending guard</h3><span class="project-status">Independent project · Safe vault prototype</span></div>
+            <p class="project-summary">A Safe-based vault prototype enforcing on-chain spending limits, additional-signer approval and delayed, cancellable withdrawals.</p>
+            <p class="project-stack">React · TypeScript · Solidity · Safe · WebAuthn</p>
+            <details class="project-notes">
+              <summary>A closer look</summary>
+              <div class="notes-body">
+                <p>Validated the core policy flows on Sepolia through adversarial and invariant testing, then published the architecture and testing findings.</p>
+                <p>This remains an unaudited research prototype on a test network.</p>
+              </div>
+            </details>
+          </div>
+          <nav class="project-links" aria-label="Tiered spending guard links">
+            <a href="https://github.com/vibern0/tiered-spending-guard">source <span aria-hidden="true">↗</span></a>
+            <a href="articles/bounded-spending-vault.html">technical article <span aria-hidden="true">↗</span></a>
+          </nav>
+        </article>
+
+        <article class="project" id="mosaic" aria-labelledby="mosaic-title">
+          <span class="project-icon" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none"><circle cx="7" cy="16" r="3" /><circle cx="24" cy="8" r="3" /><circle cx="24" cy="24" r="3" /><path d="m10 15 11-6m-11 8 11 6M24 11v10" /></svg></span>
+          <div class="project-content">
+            <div class="project-heading"><h3 id="mosaic-title">Mosaic</h3><span class="project-status">ETHGlobal Circuit Breaker · Hackathon project · Feb 2024</span></div>
+            <p class="project-summary">A reputation system exploring how zero-knowledge proofs can validate trust relationships without revealing users’ connections.</p>
+            <p class="project-stack">Noir · Barretenberg · Solidity · TypeScript · Hardhat · viem</p>
+            <details class="project-notes">
+              <summary>A closer look</summary>
+              <div class="notes-body">
+                <p>The hackathon proof of concept kept the underlying social graph private while proving the relationships needed by the reputation system.</p>
+              </div>
+            </details>
+          </div>
+          <nav class="project-links" aria-label="Mosaic links">
+            <a href="https://github.com/vibern0/circuit-breaker-mosaic">source <span aria-hidden="true">↗</span></a>
           </nav>
         </article>
 
@@ -238,44 +276,6 @@
               </div>
             </details>
           </div>
-        </article>
-
-        <article class="project" id="mosaic" aria-labelledby="mosaic-title">
-          <span class="project-icon" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none"><circle cx="7" cy="16" r="3" /><circle cx="24" cy="8" r="3" /><circle cx="24" cy="24" r="3" /><path d="m10 15 11-6m-11 8 11 6M24 11v10" /></svg></span>
-          <div class="project-content">
-            <div class="project-heading"><h3 id="mosaic-title">Mosaic</h3><span class="project-status">ETHGlobal Circuit Breaker · Feb 2024</span></div>
-            <p class="project-summary">A zero-knowledge trust network for proving relationships without exposing the social graph.</p>
-            <p class="project-stack">Noir · Barretenberg · Solidity · TypeScript · Hardhat · viem</p>
-            <details class="project-notes">
-              <summary>A closer look</summary>
-              <div class="notes-body">
-                <p>The hackathon proof of concept explored how zero-knowledge proofs could validate trust relationships without revealing users’ connections.</p>
-              </div>
-            </details>
-          </div>
-          <nav class="project-links" aria-label="Mosaic links">
-            <a href="https://github.com/vibern0/circuit-breaker-mosaic">source <span aria-hidden="true">↗</span></a>
-          </nav>
-        </article>
-
-        <article class="project" id="tiered-spending-guard" aria-labelledby="tiered-spending-guard-title">
-          <span class="project-icon" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none"><path d="m16 3 11 5v8c0 6-5 10-11 13C10 26 5 22 5 16V8L16 3Z" /><path d="m11 16 3 3 7-7" /></svg></span>
-          <div class="project-content">
-            <div class="project-heading"><h3 id="tiered-spending-guard-title">Tiered spending guard</h3><span class="project-status">Testnet research</span></div>
-            <p class="project-summary">Small everyday transfers take a simpler path. Larger transfers require extra approval or a cancellable delay.</p>
-            <p class="project-stack">React · TypeScript · Solidity · Safe · WebAuthn</p>
-            <details class="project-notes">
-              <summary>A closer look</summary>
-              <div class="notes-body">
-                <p>The Safe-based vault enforces on-chain spending limits, additional-signer approval and delayed, cancellable withdrawals. Adversarial and invariant tests cover the core policy flows.</p>
-                <p>This remains an unaudited research prototype on a test network.</p>
-              </div>
-            </details>
-          </div>
-          <nav class="project-links" aria-label="Tiered spending guard links">
-            <a href="https://github.com/vibern0/tiered-spending-guard">source <span aria-hidden="true">↗</span></a>
-            <a href="articles/bounded-spending-vault.html">technical article <span aria-hidden="true">↗</span></a>
-          </nav>
         </article>
       </section>
 

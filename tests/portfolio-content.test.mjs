@@ -128,27 +128,54 @@ test('impactMarket evidence stays local, descriptive and limited to two items', 
   }
 });
 
-test('projects expose the CV-backed proof, stacks and destinations', async () => {
+test('projects follow the requested order and expose every CV-backed detail', async () => {
+  assert.deepEqual(await page.locator('.projects > .project').evaluateAll((projects) => projects.map((project) => project.id)), [
+    'kettigo', 'tiered-spending-guard', 'mosaic', 'task-cycle',
+  ]);
+
   const mosaic = page.locator('#mosaic');
   assert.equal(await mosaic.count(), 1);
-  assert.match((await mosaic.textContent()).replace(/\s+/g, ' '), /ETHGlobal Circuit Breaker · Feb 2024/);
+  const mosaicText = (await mosaic.textContent()).replace(/\s+/g, ' ');
+  assert.match(mosaicText, /ETHGlobal Circuit Breaker/);
+  assert.match(mosaicText, /Hackathon project/);
+  assert.match(mosaicText, /Feb 2024/);
+  assert.match(mosaicText, /reputation system/);
+  assert.match(mosaicText, /zero-knowledge proofs/);
+  assert.match(mosaicText, /without revealing users’ connections/);
   assert.deepEqual((await mosaic.locator('.project-stack').textContent()).split('·').map((item) => item.trim()), [
     'Noir', 'Barretenberg', 'Solidity', 'TypeScript', 'Hardhat', 'viem',
   ]);
   assert.equal(await mosaic.locator('a').getAttribute('href'), 'https://github.com/vibern0/circuit-breaker-mosaic');
 
   const kettigoText = (await page.locator('#kettigo').textContent()).replace(/\s+/g, ' ');
+  assert.match(kettigoText, /Independent project/);
+  assert.match(kettigoText, /Ethereum Sepolia prototype/);
+  assert.match(kettigoText, /mobile-first savings prototype/);
+  assert.match(kettigoText, /Zama FHE/);
+  assert.match(kettigoText, /encrypted balances/);
+  assert.match(kettigoText, /deposit-weighted prize draws/);
   assert.match(kettigoText, /confidential USDC/);
+  assert.match(kettigoText, /Safe smart accounts/);
   assert.match(kettigoText, /sponsored transactions/);
-  assert.equal(await page.locator('#task-cycle').count(), 1);
+  assert.match(kettigoText, /automated withdrawal processing/);
 
   const guard = page.locator('#tiered-spending-guard');
   assert.equal(await guard.count(), 1);
+  const guardText = (await guard.textContent()).replace(/\s+/g, ' ');
+  assert.match(guardText, /Independent project/);
+  assert.match(guardText, /Safe vault prototype/);
+  assert.match(guardText, /on-chain spending limits/);
+  assert.match(guardText, /additional-signer approval/);
+  assert.match(guardText, /delayed, cancellable withdrawals/);
+  assert.match(guardText, /adversarial and invariant testing/);
+  assert.match(guardText, /published the architecture and testing findings/);
   assert.deepEqual(await guard.locator('.project-links a').evaluateAll((links) => links.map((link) => link.getAttribute('href'))), [
     'https://github.com/vibern0/tiered-spending-guard',
     'articles/bounded-spending-vault.html',
   ]);
-  assert.match((await guard.textContent()).replace(/\s+/g, ' '), /unaudited research prototype on a test network/);
+  assert.match(guardText, /unaudited research prototype on a test network/);
+
+  assert.equal(await page.locator('#task-cycle').count(), 1);
 });
 
 test('expanded experience stays within phone, tablet and desktop viewports', async () => {
