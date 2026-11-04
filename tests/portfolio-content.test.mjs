@@ -310,6 +310,53 @@ test('timeline keyboard and reduced-motion behavior remains accessible', async (
   await page.emulateMedia({ reducedMotion: 'no-preference' });
 });
 
+test('switching career entries keeps the navigation and following content in place', async () => {
+  for (const width of [320, 390, 700, 701, 900, 1440]) {
+    await page.setViewportSize({ width, height: 844 });
+    await page.goto(siteUrl, { waitUntil: 'networkidle' });
+    const positions = () => page.evaluate(() =>
+      [...document.querySelectorAll('.milestone, #skills')].map((element) => {
+        const bounds = element.getBoundingClientRect();
+        return { x: bounds.left, y: bounds.top + scrollY };
+      }));
+    const initial = await positions();
+    for (const role of ['now', 'now', 'impactmarket', 'tech-hq', 'gnosis']) {
+      await page.locator(`#${role}-trigger`).click();
+      assert.deepEqual(await positions(), initial, `Layout moved during the fade at ${width}px`);
+      await page.locator('.career-panel').evaluateAll((panels) => Promise.allSettled(
+        panels.flatMap((panel) => panel.getAnimations().map((animation) => animation.finished))));
+      assert.deepEqual(await positions(), initial, `Layout moved at ${width}px when selecting ${role}`);
+      assert.equal(await page.locator('.career-panel:visible').count(), 1);
+      assert.equal(await page.locator(`#${role}-panel`).isVisible(), true);
+    }
+  }
+});
+
+test('career entries crossfade and inactive content cannot receive focus', async () => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto(siteUrl, { waitUntil: 'networkidle' });
+  await page.locator('#now-trigger').click();
+  const fading = await page.locator('#now-panel').evaluate((panel) => {
+    const fade = panel.getAnimations().find((animation) => animation.transitionProperty === 'opacity');
+    if (!fade) return null;
+    fade.pause();
+    fade.currentTime = fade.effect.getTiming().duration / 2;
+    return Number(getComputedStyle(panel).opacity);
+  });
+  assert.ok(fading > 0 && fading < 1, `Expected an intermediate opacity, got ${fading}`);
+  await page.locator('.career-panel').evaluateAll((panels) => panels.forEach((panel) => {
+    panel.getAnimations().forEach((animation) => animation.finish());
+  }));
+  assert.equal(await page.locator('#gnosis-panel').evaluate((panel) => panel.inert), true);
+  assert.equal(await page.locator('#now-panel').evaluate((panel) => panel.inert), false);
+
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.locator('#impactmarket-trigger').click();
+  assert.equal(await page.locator('#impactmarket-panel').evaluate((panel) => getComputedStyle(panel).opacity), '1');
+  assert.equal(await page.locator('.career-panel:visible').count(), 1);
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
+});
+
 test('experience and evidence remain available without JavaScript', async () => {
   const noScript = await browser.newContext({ javaScriptEnabled: false, viewport: { width: 390, height: 844 } });
   const plain = await noScript.newPage();

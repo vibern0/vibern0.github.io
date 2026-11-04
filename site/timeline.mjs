@@ -25,21 +25,15 @@ function initializeTimeline() {
   let activeIndex = Math.max(0, stops.findIndex((stop) => stop.hasAttribute('data-initial')));
   let frame = 0;
 
-  function selectMilestone(index, keepPosition = true, toggle = false) {
-    const previousTop = buttons[index].getBoundingClientRect().top;
-    activeIndex = toggle && activeIndex === index ? -1 : index;
+  function selectMilestone(index) {
+    activeIndex = index;
 
     buttons.forEach((button, current) => {
       const selected = current === activeIndex;
       button.setAttribute('aria-expanded', String(selected));
       panels[current].hidden = !selected;
+      panels[current].inert = !selected;
     });
-
-    // Keep a tapped milestone in place when a panel above it collapses.
-    if (keepPosition && mobileLayout.matches) {
-      const offset = buttons[index].getBoundingClientRect().top - previousTop;
-      if (offset !== 0) window.scrollBy({ top: offset, behavior: 'instant' });
-    }
     requestUpdate();
   }
 
@@ -60,12 +54,12 @@ function initializeTimeline() {
   }
 
   buttons.forEach((button, index) => {
-    button.addEventListener('click', () => selectMilestone(index, true, true));
+    button.addEventListener('click', () => selectMilestone(index));
     button.addEventListener('keydown', (event) => {
       if (!keyboardKeys.has(event.key)) return;
       event.preventDefault();
       const next = getNextMilestoneIndex(index, event.key, buttons.length);
-      selectMilestone(next, false);
+      selectMilestone(next);
       buttons[next].focus();
     });
   });
@@ -74,6 +68,7 @@ function initializeTimeline() {
   buttons.forEach((button, index) => {
     button.setAttribute('aria-expanded', String(index === activeIndex));
     panels[index].hidden = index !== activeIndex;
+    panels[index].inert = index !== activeIndex;
   });
   timeline.classList.add('is-enhanced');
 
