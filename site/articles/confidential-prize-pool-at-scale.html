@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#f1f4ee">
+    <meta name="author" content="Bernardo Vieira">
+    <meta name="description" content="How Kettigo replaces a 32-participant confidential prize-draw bottleneck with encrypted balances in a Merkle tree.">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Scaling a confidential prize pool beyond 32 participants">
+    <meta property="og:description" content="A Merkle-tree approach to private, deposit-weighted prize draws using fully homomorphic encryption.">
+    <title>Scaling a confidential prize pool beyond 32 participants — Bernardo Vieira</title>
+    <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+    <link rel="stylesheet" href="../styles.css?v=20261023-1">
+    <link rel="stylesheet" href="../article.css?v=20261029-2">
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to article</a>
+    <div class="page article-page">
+      <header class="masthead">
+        <a class="home-link" href="../" aria-label="vibern home">vibern <span>/ home</span></a>
+        <span class="location">Porto, Portugal <span aria-hidden="true">✳</span></span>
+      </header>
+
+      <main id="main">
+        <article class="article" aria-labelledby="article-title">
+          <header class="article-header">
+            <p class="article-meta">Engineering notes <span aria-hidden="true">/</span> <time datetime="2026-11-04">4 Nov 2026</time></p>
+            <h1 id="article-title">Scaling a confidential prize pool beyond <span class="article-nowrap">32 participants</span></h1>
+            <p class="article-author">By Bernardo Vieira</p>
+          </header>
+
+          <section aria-labelledby="the-bottleneck">
+            <h2 id="the-bottleneck">The bottleneck</h2>
+            <p>Kettigo is a savings prototype in which deposits earn entries into a prize draw, while balances remain encrypted. Its first draw design supported only 32 participants—not because 32 is a meaningful product limit, but because the closing transaction did too much work.</p>
+            <p>To close a round, it scanned every participant, accumulated encrypted balances, determined the winning ticket and credited the prize using fully homomorphic encryption (FHE). Every additional participant increased the work and lengthened the chain of dependent operations in one transaction. Raising the limit would only postpone the same problem.</p>
+          </section>
+
+          <section aria-labelledby="the-new-shape">
+            <h2 id="the-new-shape">Move the work out of draw closure</h2>
+            <p>The alternative is a Merkle tree whose leaves hold encrypted balances. Deposits update the encrypted sum tree as they happen. When a round closes, the contract freezes the tree root and creates an encrypted winning ticket.</p>
+            <figure class="article-figure">
+              <a href="../assets/merkle-fhe-architecture.png">
+                <img src="../assets/merkle-fhe-architecture.png" width="1536" height="1024" loading="lazy" decoding="async" alt="Architecture for a confidential prize draw: deposits update an encrypted sum tree; draw closure freezes the root and an encrypted ticket; an event archive provides historical proofs; the contract verifies one participant’s proof before using FHE to check their ticket interval and pay the fixed beneficiary.">
+              </a>
+              <figcaption>An encrypted balance tree turns the close operation into a fixed-size snapshot. <a href="../assets/merkle-fhe-architecture.png">View full-size diagram <span aria-hidden="true">↗</span></a></figcaption>
+            </figure>
+            <p>After that, participants verify their own outcome. A Merkle proof authenticates the balance and position they held at closure. FHE then determines whether the encrypted winning ticket falls within that participant’s ticket interval. If it does, the prize is paid to the beneficiary bound to the authenticated proof.</p>
+            <p>This is the important change: closing a draw no longer scans all users. A proof check follows no more than 32 tree levels, independent of how many slots are occupied. The tested tree accommodates up to 2<sup>32</sup> slots, although usable scale will ultimately also depend on arithmetic limits, storage and network throughput.</p>
+          </section>
+
+          <section aria-labelledby="proving-the-approach">
+            <h2 id="proving-the-approach">Testing the approach</h2>
+            <p>Local validation funded 4,096 accounts and ran a prize check for every one using a simulated FHE backend. A separate 24-hour Sepolia run used real FHE with eight wallets across 48 cycles, producing 1,635 confirmed transactions with no mined reverts and correct principal and prize accounting.</p>
+            <p>The live run was useful precisely because it was not frictionless. RPC failures, service timeouts and unavailable historical logs all appeared. Recovery from retained events worked, which makes durable archival storage a real design requirement rather than an implementation detail.</p>
+            <p>The implementation and validation records are available in the <a href="https://github.com/vibern0/kettigo">Kettigo source repository</a>, including the <a href="https://github.com/vibern0/kettigo/blob/main/packages/contracts/experiments/claim-lab/contracts/ReusableMerkleProbe.sol">experimental contract</a>, <a href="https://github.com/vibern0/kettigo/blob/main/packages/contracts/experiments/claim-lab/VALIDATION.md">local validation</a> and <a href="https://github.com/vibern0/kettigo/blob/main/packages/contracts/experiments/claim-lab/SOAK_VALIDATION.md">Sepolia results</a>.</p>
+          </section>
+
+          <section aria-labelledby="what-remains">
+            <h2 id="what-remains">What remains</h2>
+            <p>This demonstrates a viable path beyond the original 32-participant design; it does not establish production readiness. Maximum live throughput and long-horizon recovery over a 60-day draw have not yet been demonstrated, and integration into the product remains work to do.</p>
+            <p>Still, the design changes the question from “how many people can fit in a draw-closing transaction?” to “how reliably can participants retrieve a historical proof?” That is a far more tractable systems problem—and it preserves the privacy properties that make the prize pool interesting in the first place.</p>
+          </section>
+
+          <footer class="article-footer">
+            <a href="../"><span aria-hidden="true">←</span> Back home</a>
+            <a href="mailto:blvieira5@gmail.com">Get in touch <span aria-hidden="true">↗</span></a>
+          </footer>
+        </article>
+      </main>
+    </div>
+  </body>
+</html>
