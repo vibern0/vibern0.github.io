@@ -56,7 +56,7 @@ async function panelContent(id) {
     date: (await panel.locator('.career-date').textContent()).trim(),
     role: (await panel.locator('.career-role').textContent()).trim(),
     text: (await panel.textContent()).replace(/\s+/g, ' ').trim(),
-    stack: await panel.locator('.stack-list > li').allTextContents(),
+    stack: await panel.locator('.career-full-stack > li').allTextContents(),
     links: await panel.locator('a').evaluateAll((anchors) => anchors.map((anchor) => anchor.href)),
   };
 }
@@ -206,6 +206,29 @@ test('CV links download the locally hosted PDF', async () => {
   assert.ok(body.length > 20000);
 });
 
+test('experience shows only main technologies until its details are expanded', async () => {
+  await page.goto(siteUrl, { waitUntil: 'networkidle' });
+  for (const role of ['gnosis', 'impactmarket', 'tech-hq']) {
+    const panel = page.locator(`#${role}-panel`);
+    if (!await panel.isVisible()) await page.locator(`#${role}-trigger`).click();
+    const main = panel.locator('.career-main .career-stack');
+    const details = panel.locator('.career-notes');
+    const full = details.locator('.career-full-stack');
+    const mainItems = await main.locator('li').allTextContents();
+    const fullItems = await full.locator('li').allTextContents();
+    assert.ok(mainItems.length <= 6);
+    assert.ok(fullItems.length > mainItems.length);
+    assert.ok(mainItems.every((item) => fullItems.includes(item)));
+    assert.equal(await main.isVisible(), true);
+    assert.equal(await full.isVisible(), false);
+    await details.locator('summary').focus();
+    await details.locator('summary').press('Enter');
+    assert.equal(await full.isVisible(), true);
+    await details.locator('summary').press('Space');
+    assert.equal(await full.isVisible(), false);
+  }
+});
+
 test('project summaries stay short and details expand by keyboard', async () => {
   await page.goto(siteUrl, { waitUntil: 'networkidle' });
   for (const project of await page.locator('.projects > .project').all()) {
@@ -269,6 +292,10 @@ test('experience and evidence remain available without JavaScript', async () => 
   assert.equal(await notes.locator('.project-full-stack').isVisible(), false);
   await notes.locator('summary').click();
   assert.equal(await notes.locator('.project-full-stack').isVisible(), true);
+  const experienceNotes = plain.locator('#gnosis-panel .career-notes');
+  assert.equal(await experienceNotes.locator('.career-full-stack').isVisible(), false);
+  await experienceNotes.locator('summary').click();
+  assert.equal(await experienceNotes.locator('.career-full-stack').isVisible(), true);
   const dimensions = await plain.evaluate(() => ({ viewport: innerWidth, content: document.documentElement.scrollWidth }));
   assert.ok(dimensions.content <= dimensions.viewport);
   await noScript.close();
