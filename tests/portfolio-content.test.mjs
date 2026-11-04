@@ -98,6 +98,21 @@ test('experience presents CV-backed outcomes, sources and role-specific stacks',
   assert.match(techHq.text, /Altice Labs, Oct 2017 – Jul 2018/);
 });
 
+test('career panels use the supplied company logos', async () => {
+  const logos = page.locator('.career-logo img');
+  assert.equal(await logos.count(), 3);
+  assert.deepEqual(await logos.evaluateAll((images) => images.map((image) => ({
+    src: new URL(image.src).pathname,
+    alt: image.alt,
+    complete: image.complete,
+    naturalWidth: image.naturalWidth,
+  }))), [
+    { src: '/assets/gnosis-logo.png', alt: 'Gnosis logo', complete: true, naturalWidth: 2000 },
+    { src: '/assets/impactmarket-logo.png', alt: 'impactMarket logo', complete: true, naturalWidth: 376 },
+    { src: '/assets/tech-hq-logo.png', alt: 'Tech HQ logo', complete: true, naturalWidth: 200 },
+  ]);
+});
+
 test('impactMarket evidence stays local, descriptive and limited to two items', async () => {
   const impactPanel = page.locator('#impactmarket-panel');
   if (!await impactPanel.isVisible()) await page.locator('#impactmarket-trigger').click();
