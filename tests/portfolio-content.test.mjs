@@ -12,6 +12,7 @@ const contentTypes = {
   '.css': 'text/css; charset=utf-8',
   '.html': 'text/html; charset=utf-8',
   '.mjs': 'text/javascript; charset=utf-8',
+  '.pdf': 'application/pdf',
   '.svg': 'image/svg+xml',
   '.webp': 'image/webp',
 };
@@ -64,27 +65,37 @@ test('experience presents CV-backed outcomes, sources and role-specific stacks',
   const gnosis = await panelContent('#gnosis-panel');
   assert.equal(gnosis.date, 'Aug 2024 – Sep 2026');
   assert.equal(gnosis.role, 'Full-stack Web3 engineer');
+  assert.equal(await page.locator('#gnosis-panel .career-highlights > li').count(), 3);
   assert.match(gnosis.text, /Circles v1 and v2/);
-  assert.match(gnosis.text, /1,200 users per rolling week/);
+  assert.match(gnosis.text, /1,200 weekly users/);
   assert.deepEqual(gnosis.stack, [
-    'TypeScript', 'Node.js', 'Express', 'Svelte', 'Solidity', 'Gnosis', 'Envio', 'GraphQL', 'Firebase',
+    'TypeScript', 'Node.js', 'Express', 'Svelte', 'Solidity', 'Gnosis Chain', 'Envio', 'GraphQL', 'Firebase',
+    'Vitest', 'Playwright', 'Claude',
   ]);
+  assert.match(gnosis.text, /Circles-denominated card cashback/);
+  assert.match(gnosis.text, /\$703k in swap volume in Q2 2026/);
+  assert.match(gnosis.text, /demurrage calculations/);
 
   const impactMarket = await panelContent('#impactmarket-panel');
   assert.match(impactMarket.text, /45k\+/);
   assert.match(impactMarket.text, /\$3M\+/);
   assert.deepEqual(impactMarket.stack, [
-    'TypeScript', 'Node.js', 'Express', 'React', 'Next.js', 'React Native', 'Solidity', 'Celo',
-    'The Graph', 'GraphQL', 'PostgreSQL', 'Redis', 'Firebase', 'AWS Lambda', 'S3', 'CloudFront',
+    'TypeScript', 'Node.js', 'Express', 'React', 'Next.js', 'App Router', 'Server Components', 'React Native', 'Prismic', 'Solidity', 'Celo',
+    'The Graph', 'GraphQL', 'PostgreSQL', 'Sequelize', 'Redis', 'Firebase', 'AWS Lambda', 'S3', 'CloudFront',
     'API Gateway', 'Heroku', 'Docker', 'CircleCI',
   ]);
   assert.ok(impactMarket.links.includes('https://github.com/impactMarket/utils'));
   assert.ok(impactMarket.links.includes('https://medium.com/pactfoundation/year-in-review-impactmarkets-journey-in-2023-63d2235de08e'));
+  assert.equal(impactMarket.date, 'May 2020 – Jan 2024');
+  assert.match(impactMarket.text, /nearly two years/);
+  assert.match(impactMarket.text, /\$154k\+/);
 
   const techHq = await panelContent('#tech-hq-panel');
   assert.match(techHq.text, /450\+ GitHub stars/);
-  assert.deepEqual(techHq.stack, ['Solidity', 'JavaScript', 'TypeScript', 'React', 'Hardhat']);
-  assert.equal((await page.getByText('Altice Labs', { exact: false }).allTextContents()).length, 1);
+  assert.deepEqual(techHq.stack, ['Solidity', 'Ethereum', 'JavaScript', 'TypeScript', 'React', 'D3.js']);
+  assert.ok(techHq.links.includes('https://github.com/obernardovieira/solviz'));
+  assert.equal(await page.locator('#tech-hq-panel .earlier-role').count(), 1);
+  assert.match(techHq.text, /Altice Labs, Oct 2017 – Jul 2018/);
 });
 
 test('impactMarket evidence stays local, descriptive and limited to two items', async () => {
@@ -142,10 +153,10 @@ test('projects follow the requested order and expose every CV-backed detail', as
   assert.match(mosaicText, /reputation system/);
   assert.match(mosaicText, /zero-knowledge proofs/);
   assert.match(mosaicText, /without revealing users’ connections/);
-  assert.deepEqual((await mosaic.locator('.project-stack').textContent()).split('·').map((item) => item.trim()), [
+  assert.deepEqual((await mosaic.locator('.project-full-stack').textContent()).replace('Full stack:', '').split(',').map((item) => item.trim().replace(/\.$/, '')), [
     'Noir', 'Barretenberg', 'Solidity', 'TypeScript', 'Hardhat', 'viem',
   ]);
-  assert.equal(await mosaic.locator('a').getAttribute('href'), 'https://github.com/vibern0/circuit-breaker-mosaic');
+  assert.equal(await mosaic.locator('.project-links a').getAttribute('href'), 'https://github.com/vibern0/circuit-breaker-mosaic');
 
   const kettigoText = (await page.locator('#kettigo').textContent()).replace(/\s+/g, ' ');
   assert.match(kettigoText, /Independent project/);
@@ -158,6 +169,8 @@ test('projects follow the requested order and expose every CV-backed detail', as
   assert.match(kettigoText, /Safe smart accounts/);
   assert.match(kettigoText, /sponsored transactions/);
   assert.match(kettigoText, /automated withdrawal processing/);
+  assert.match(kettigoText, /Cloudflare Workers APIs and D1 storage/);
+  assert.match(kettigoText, /TanStack Query/);
 
   const guard = page.locator('#tiered-spending-guard');
   assert.equal(await guard.count(), 1);
@@ -174,8 +187,47 @@ test('projects follow the requested order and expose every CV-backed detail', as
     'articles/bounded-spending-vault.html',
   ]);
   assert.match(guardText, /unaudited research prototype on a test network/);
+  assert.match(guardText, /React Hook Form, Zod, shadcn\/ui/);
 
   assert.equal(await page.locator('#task-cycle').count(), 1);
+});
+
+test('CV links download the locally hosted PDF', async () => {
+  const links = page.locator('a[download="Bernardo_Vieira_CV.pdf"]');
+  assert.equal(await links.count(), 2);
+  for (const link of await links.all()) {
+    assert.equal(await link.getAttribute('href'), 'cv/bernardo-vieira.pdf');
+  }
+  const response = await page.request.get(new URL('cv/bernardo-vieira.pdf', siteUrl).href);
+  assert.equal(response.status(), 200);
+  assert.match(response.headers()['content-type'], /application\/pdf/);
+  const body = await response.body();
+  assert.equal(body.subarray(0, 5).toString(), '%PDF-');
+  assert.ok(body.length > 20000);
+});
+
+test('project summaries stay short and details expand by keyboard', async () => {
+  await page.goto(siteUrl, { waitUntil: 'networkidle' });
+  for (const project of await page.locator('.projects > .project').all()) {
+    assert.ok((await project.locator('.project-summary').textContent()).length <= 140);
+    const details = project.locator('.project-notes');
+    const summary = details.locator('summary');
+    assert.equal(await details.getAttribute('open'), null);
+    assert.equal(await details.locator('.project-full-stack').isVisible(), false);
+    await summary.focus();
+    await summary.press('Enter');
+    assert.equal(await details.locator('.project-full-stack').isVisible(), true);
+    await summary.press('Space');
+    assert.equal(await details.locator('.project-full-stack').isVisible(), false);
+  }
+});
+
+test('skills and education include the newly confirmed experience', async () => {
+  const skills = await page.locator('#skills').textContent();
+  for (const keyword of ['App Router', 'Server Components', 'Prismic', 'gRPC', 'WebSockets', 'message queues', 'Sequelize', 'Vitest', 'Playwright', 'Claude', 'Codex']) {
+    assert.ok(skills.includes(keyword), keyword);
+  }
+  assert.match(await page.locator('.education').textContent(), /Instituto Superior de Engenharia de Coimbra/);
 });
 
 test('expanded experience stays within phone, tablet and desktop viewports', async () => {
@@ -183,6 +235,7 @@ test('expanded experience stays within phone, tablet and desktop viewports', asy
     await page.setViewportSize({ width, height: 844 });
     await page.evaluate(() => new Promise((resolveFrame) => requestAnimationFrame(() => requestAnimationFrame(resolveFrame))));
     if (!await page.locator('#impactmarket-panel').isVisible()) await page.locator('#impactmarket-trigger').click();
+    await page.locator('details').evaluateAll((details) => details.forEach((detail) => { detail.open = true; }));
     const dimensions = await page.evaluate(() => ({ viewport: innerWidth, content: document.documentElement.scrollWidth }));
     assert.ok(dimensions.content <= dimensions.viewport, `Overflow at ${width}px: ${dimensions.content}px`);
   }
@@ -212,6 +265,10 @@ test('experience and evidence remain available without JavaScript', async () => 
   await plain.goto(siteUrl, { waitUntil: 'networkidle' });
   assert.equal(await plain.locator('.career-panel:visible').count(), 4);
   assert.equal(await plain.locator('#impactmarket-panel .evidence-card').count(), 2);
+  const notes = plain.locator('#kettigo .project-notes');
+  assert.equal(await notes.locator('.project-full-stack').isVisible(), false);
+  await notes.locator('summary').click();
+  assert.equal(await notes.locator('.project-full-stack').isVisible(), true);
   const dimensions = await plain.evaluate(() => ({ viewport: innerWidth, content: document.documentElement.scrollWidth }));
   assert.ok(dimensions.content <= dimensions.viewport);
   await noScript.close();

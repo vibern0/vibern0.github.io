@@ -4,14 +4,14 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="#f1f4ee">
-    <meta name="description" content="Bernardo Vieira, senior full-stack engineer in Porto. Building web and mobile products. Previously at Gnosis; impactMarket co-founder and former CTO.">
+    <meta name="description" content="Bernardo Vieira, senior full-stack engineer in Porto. TypeScript, React, Next.js, Node.js and Solidity. Previously at Gnosis; impactMarket co-founder and former CTO. Projects, experience and CV.">
     <meta property="og:type" content="website">
     <meta property="og:title" content="Bernardo Vieira — Full-stack engineer">
     <meta property="og:description" content="Web and mobile products, from the interface to the systems behind them. Senior full-stack engineer in Porto. Previously at Gnosis; impactMarket co-founder.">
     <title>Bernardo Vieira — Full-stack engineer</title>
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <link rel="preload" as="image" href="assets/porto.webp">
-    <link rel="stylesheet" href="styles.css?v=20261030-1">
+    <link rel="stylesheet" href="styles.css?v=20261104-1">
     <link rel="stylesheet" href="andorinha.css?v=20261022-1">
     <script type="module" src="timeline.mjs?v=20261027-1"></script>
     <script type="module" src="andorinha.mjs?v=20261022-1"></script>
@@ -34,11 +34,12 @@
           <h1 id="name">Bernardo Vieira</h1>
           <p class="role">Senior full-stack engineer.</p>
           <p class="intro">I build the parts people see<br class="desktop-break"> and the systems they don’t.</p>
-          <p class="credentials">Previously at Gnosis.<br>Co-founder &amp; former CTO of impactMarket.</p>
+          <p class="credentials">Nearly a decade building production software. At Gnosis, I built Circles-denominated card cashback, token swaps and the indexing behind Gnosis App. Before that, I co-founded impactMarket, built its technical foundation and hired six engineers while leading delivery.</p>
           <nav class="links" aria-label="Find me online">
             <a href="mailto:blvieira5@gmail.com">email <span aria-hidden="true">↗</span></a>
             <a href="https://github.com/vibern0">github <span aria-hidden="true">↗</span></a>
             <a href="https://www.linkedin.com/in/vibern/">linkedin <span aria-hidden="true">↗</span></a>
+            <a href="cv/bernardo-vieira.pdf" download="Bernardo_Vieira_CV.pdf" type="application/pdf">CV <span aria-hidden="true">↓</span></a>
             <a href="https://x.com/vibern0" aria-label="Find me on X, formerly Twitter">x <span aria-hidden="true">↗</span></a>
           </nav>
         </div>
@@ -99,17 +100,26 @@
                   <p class="career-date">Aug 2024 – Sep 2026</p>
                   <h3>Gnosis</h3>
                   <p class="career-role">Full-stack Web3 engineer</p>
-                  <p>Expanded Envio indexing for Circles v1 and v2, powering community profiles, connections, transaction tracking and the balance data required for demurrage calculations.</p>
+                  <p>Joined in August 2024 when the product was called Metri. Built backend systems, product features and operations tools as it grew into Gnosis App.</p>
                   <ul class="career-stack stack-list" aria-label="Technology stack">
-                    <li>TypeScript</li><li>Node.js</li><li>Express</li><li>Svelte</li><li>Solidity</li><li>Gnosis</li><li>Envio</li><li>GraphQL</li><li>Firebase</li>
+                    <li>TypeScript</li><li>Node.js</li><li>Express</li><li>Svelte</li><li>Solidity</li><li>Gnosis Chain</li><li>Envio</li><li>GraphQL</li><li>Firebase</li><li>Vitest</li><li>Playwright</li><li>Claude</li>
                   </ul>
                 </div>
               </div>
               <div class="career-aside">
-                <p class="small-label">Across the stack</p>
-                <p>Unified transfers and swaps into a faster activity feed, then indexed Circles-to-Gnosis Pay top-ups so a multi-step conversion read as one clear payment flow.</p>
-                <p>Built Gnosis Pay cashback tooling for approximately 1,200 users per rolling week, including payout operations, transaction estimates and Intercom support automation.</p>
+                <p class="small-label">Selected impact</p>
+                <ul class="career-highlights">
+                  <li>Expanded Envio indexing across Circles v1 and v2 for community discovery, trust connections, balance updates and demurrage calculations.</li>
+                  <li>Built token swaps and a unified transfer/swap history. Gnosis App recorded <a href="https://docs.gnosis.io/docs/knowledge/quarterly-report-2026-q2">approximately $703k in swap volume in Q2 2026</a>.</li>
+                  <li>Launched Circles-denominated card cashback for approximately 1,200 weekly users, with self-service payout tools and Intercom AI support integration to reduce manual investigations.</li>
+                </ul>
               </div>
+              <details class="career-notes">
+                <summary>More about the work</summary>
+                <p>Reworked the transaction data model so transfers and swaps could share a faster activity feed despite their different event formats. Indexed the balances and metrics needed to calculate Circles demurrage.</p>
+                <p>For <a href="https://forum.gnosis.io/t/gip-128-progress-report-q3-2025/11712">Circles-funded card top-ups</a>, indexed token swaps, conversion to EURe and settlement so the app could display a simple outgoing wallet transfer and incoming card top-up.</p>
+                <p>Evolved cashback calculation scripts and payout CSVs into an internal tool the operations team could run independently. Added user-level reward investigations and transaction estimates, then exposed the relevant data to Intercom AI support.</p>
+              </details>
             </div>
           </div>
 
@@ -125,12 +135,12 @@
                   <svg viewBox="0 0 48 48" fill="none"><path d="M24 40V18m0 12C13 30 9 23 10 15c9 0 14 5 14 15Zm0-7c0-10 5-16 14-17 1 10-4 17-14 17Zm0 16c-5-5-8-7-13-7" /><path d="M24 18c-6-4-9-9-7-15 7 3 9 8 7 15Z" /></svg>
                 </span>
                 <div>
-                  <p class="career-date">2020–2024</p>
+                  <p class="career-date">May 2020 – Jan 2024</p>
                   <h3>impactMarket</h3>
                   <p class="career-role">Co-founder &amp; CTO</p>
                   <p>As the first engineer, built the initial UBI contracts, backend and blockchain indexer, then led hands-on delivery across Microcredit, Libera Wallet and Learn &amp; Earn.</p>
                   <ul class="career-stack stack-list" aria-label="Technology stack">
-                    <li>TypeScript</li><li>Node.js</li><li>Express</li><li>React</li><li>Next.js</li><li>React Native</li><li>Solidity</li><li>Celo</li><li>The Graph</li><li>GraphQL</li><li>PostgreSQL</li><li>Redis</li><li>Firebase</li><li>AWS Lambda</li><li>S3</li><li>CloudFront</li><li>API Gateway</li><li>Heroku</li><li>Docker</li><li>CircleCI</li>
+                    <li>TypeScript</li><li>Node.js</li><li>Express</li><li>React</li><li>Next.js</li><li>App Router</li><li>Server Components</li><li>React Native</li><li>Prismic</li><li>Solidity</li><li>Celo</li><li>The Graph</li><li>GraphQL</li><li>PostgreSQL</li><li>Sequelize</li><li>Redis</li><li>Firebase</li><li>AWS Lambda</li><li>S3</li><li>CloudFront</li><li>API Gateway</li><li>Heroku</li><li>Docker</li><li>CircleCI</li>
                   </ul>
                 </div>
               </div>
@@ -145,9 +155,11 @@
               <details class="career-notes">
                 <summary>More about the work</summary>
                 <p>Combined indexed blockchain activity with private PostgreSQL profiles so communities could filter, sort and report on members without putting personal information on-chain.</p>
-                <p>Created a shared <a href="https://github.com/impactMarket/utils">TypeScript and React SDK</a> used by the website and dApp for contract interactions, transactions, balances and rewards.</p>
-                <p>Built services and SDK integrations for PACT donation mining, which attracted almost 800k cUSD from 4,000+ donors in its first two months. <a href="https://medium.com/pactfoundation/4-impact-weekly-bulletin-3c4c75138d2">See the results <span aria-hidden="true">↗</span></a></p>
-                <p>Led Microcredit delivery through 500+ loans to 425 borrowers and the first MiniPay-integrated Learn &amp; Earn dApp. <a href="https://medium.com/pactfoundation/year-in-review-impactmarkets-journey-in-2023-63d2235de08e">2023 results <span aria-hidden="true">↗</span></a> · <a href="https://medium.com/pactfoundation/28-impact-bulletin-september-2023-134ca745a1f7">MiniPay integration <span aria-hidden="true">↗</span></a></p>
+                <p>Independently created the shared <a href="https://github.com/impactMarket/utils">TypeScript and React SDK</a>, giving the frontend team hooks for contract interactions, transactions, balances and rewards without handling smart contracts directly.</p>
+                <p>Built commercial Next.js features for nearly two years, using App Router and Server Components, and integrated the Prismic headless CMS.</p>
+                <p>Built backend services and SDK integrations for PACT donation mining, and reviewed the contracts implemented by our protocol partners. The programme attracted <a href="https://medium.com/pactfoundation/4-impact-weekly-bulletin-3c4c75138d2">almost 800k cUSD from 4,000+ donors in its first two months</a>.</p>
+                <p>Led Microcredit delivery from initial design through contract reviews, backend and SDK development, and the team’s UI implementation. The product delivered <a href="https://medium.com/pactfoundation/year-in-review-impactmarkets-journey-in-2023-63d2235de08e">500+ loans totalling $154k+ by year-end 2023</a>.</p>
+                <p>Led engineering across Libera Wallet and Learn &amp; Earn, remaining hands-on in the backend and SDK. Learn &amp; Earn became the <a href="https://medium.com/pactfoundation/28-impact-bulletin-september-2023-134ca745a1f7">first dApp integrated into Opera MiniPay, initially launching in Nigeria</a>.</p>
                 <p>Hired six engineers across backend, frontend, mobile and smart contracts while remaining hands-on in architecture and implementation.</p>
               </details>
               <div class="career-evidence" aria-labelledby="impactmarket-evidence-title">
@@ -178,24 +190,44 @@
                   <svg viewBox="0 0 48 48" fill="none"><path d="m17 14-10 10 10 10m14-20 10 10-10 10M28 9l-8 30" /></svg>
                 </span>
                 <div>
-                  <p class="career-date">2018–2020</p>
+                  <p class="career-date">Aug 2018 – Apr 2020</p>
                   <h3>Tech HQ</h3>
                   <p class="career-role">Blockchain developer</p>
                   <p>Delivered full-stack Ethereum applications for clients, from the interface to the contracts underneath.</p>
                   <ul class="career-stack stack-list" aria-label="Technology stack">
-                    <li>Solidity</li><li>JavaScript</li><li>TypeScript</li><li>React</li><li>Hardhat</li>
+                    <li>Solidity</li><li>Ethereum</li><li>JavaScript</li><li>TypeScript</li><li>React</li><li>D3.js</li>
                   </ul>
                 </div>
               </div>
               <div class="career-aside">
                 <p class="small-label">The work</p>
                 <p>Built and contributed to open-source contract libraries and application starter tools, including a smart-contract library with 450+ GitHub stars.</p>
-                <p class="earlier-role">Before that: software QA at Altice Labs, 2017–2018. Java &amp; Cucumber.</p>
+                <p>Created <a href="https://github.com/obernardovieira/solviz">Solviz</a>, a Solidity contract visualisation tool; developed it with a team to win <a href="https://www.linkedin.com/pulse/how-i-won-consensys-blockchain-grants-hackathon-bernardo-vieira/">1st place at the 2019 ConsenSys Blockchain Grants Hackathon in Dublin</a>.</p>
+                <p class="earlier-role">Before that: Software Quality Assurance Tester at Altice Labs, Oct 2017 – Jul 2018. Automated testing with Java and Cucumber.</p>
               </div>
+              <details class="career-notes">
+                <summary>Engineering articles</summary>
+                <p>Published practical guides on <a href="https://www.linkedin.com/pulse/creating-upgradeable-smart-contracts-bernardo-vieira/">upgradeable smart contracts</a>, <a href="https://www.linkedin.com/pulse/my-challenges-magic-ipfs-bernardo-vieira/">working with IPFS</a> and <a href="https://www.linkedin.com/pulse/how-develop-human-friendly-blockchain-applications-bernardo-vieira/">human-friendly blockchain applications</a>.</p>
+              </details>
             </div>
           </div>
         </div>
         <p class="timeline-hint"><span aria-hidden="true">↳</span> Select a stop to explore the work.</p>
+      </section>
+
+      <section class="skills" id="skills" aria-labelledby="skills-title">
+        <div class="section-heading">
+          <h2 id="skills-title">Tools I work with</h2>
+          <p>Across products, infrastructure and independent projects.</p>
+        </div>
+        <dl class="skills-grid">
+          <div><dt>Web &amp; mobile</dt><dd>React, Next.js (App Router, Server Components), Svelte, React Native, Prismic.</dd></div>
+          <div><dt>Backend &amp; data</dt><dd>TypeScript, JavaScript, Node.js, Express, REST, GraphQL, gRPC, WebSockets, message queues, PostgreSQL, SQL, Sequelize, Redis, Firebase.</dd></div>
+          <div><dt>Blockchain</dt><dd>Solidity, Ethereum, Celo, Gnosis Chain, Envio, The Graph. Exploratory work with ZK proofs and fully homomorphic encryption.</dd></div>
+          <div><dt>Infrastructure &amp; delivery</dt><dd>AWS (Lambda, S3, CloudFront, API Gateway), Heroku, Docker, Git, CircleCI; Cloudflare Workers and D1 in personal projects.</dd></div>
+          <div><dt>Testing</dt><dd>Vitest and Playwright at Gnosis; Hardhat for smart contracts; Java and Cucumber for automated testing at Altice Labs.</dd></div>
+          <div><dt>AI coding tools</dt><dd>Claude at Gnosis; Codex for independent work.</dd></div>
+        </dl>
       </section>
 
       <section class="projects" id="projects" aria-labelledby="projects-title">
@@ -208,18 +240,21 @@
           <span class="project-icon" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none"><path d="M9 5v22m14-22L9 19m6-6 10 14" /></svg></span>
           <div class="project-content">
             <div class="project-heading"><h3 id="kettigo-title">Kettigo</h3><span class="project-status">Independent project · Ethereum Sepolia prototype</span></div>
-            <p class="project-summary">A mobile-first savings prototype using Zama FHE for encrypted balances and deposit-weighted prize draws.</p>
-            <p class="project-stack">Next.js · TypeScript · Solidity · Safe · Zama</p>
+            <p class="project-summary">Confidential prize savings with encrypted balances, private draws and passkey-controlled accounts.</p>
+            <p class="project-stack">Next.js · TypeScript · Solidity · Safe · Zama FHE</p>
             <details class="project-notes">
-              <summary>A closer look</summary>
+              <summary>Details &amp; tech stack</summary>
               <div class="notes-body">
-                <p>Integrated confidential USDC, passkey-controlled Safe smart accounts and sponsored transactions, with automated withdrawal processing.</p>
+                <p>Built a mobile-first savings prototype using Zama FHE for encrypted balances and deposit-weighted prize draws. Integrated confidential USDC, passkey-controlled Safe smart accounts and sponsored transactions, with automated withdrawal processing.</p>
+                <p>Used Next.js App Router and TanStack Query for the app, plus Cloudflare Workers APIs and D1 storage for the landing-page waitlist.</p>
                 <p>The prototype runs on Ethereum Sepolia with test assets and prototype limits.</p>
+                <p class="project-full-stack"><strong>Full stack:</strong> Solidity, TypeScript, React, Next.js (App Router), TanStack Query, Tailwind CSS, Cloudflare Workers, D1, Zama FHE, Safe, Hardhat, viem.</p>
               </div>
             </details>
           </div>
           <nav class="project-links" aria-label="Kettigo links">
             <a href="https://app.kettigo.xyz">try the app <span aria-hidden="true">↗</span></a>
+            <a href="https://kettigo.xyz">website <span aria-hidden="true">↗</span></a>
             <a href="https://github.com/vibern0/kettigo">source <span aria-hidden="true">↗</span></a>
           </nav>
         </article>
@@ -228,13 +263,15 @@
           <span class="project-icon" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none"><path d="m16 3 11 5v8c0 6-5 10-11 13C10 26 5 22 5 16V8L16 3Z" /><path d="m11 16 3 3 7-7" /></svg></span>
           <div class="project-content">
             <div class="project-heading"><h3 id="tiered-spending-guard-title">Tiered spending guard</h3><span class="project-status">Independent project · Safe vault prototype</span></div>
-            <p class="project-summary">A Safe-based vault prototype enforcing on-chain spending limits, additional-signer approval and delayed, cancellable withdrawals.</p>
-            <p class="project-stack">React · TypeScript · Solidity · Safe · WebAuthn</p>
+            <p class="project-summary">A Safe vault for spending limits, additional approvals and delayed withdrawals.</p>
+            <p class="project-stack">React · TypeScript · Solidity · Safe · Zodiac</p>
             <details class="project-notes">
-              <summary>A closer look</summary>
+              <summary>Details &amp; tech stack</summary>
               <div class="notes-body">
+                <p>Designed a Safe vault and React UI prototype enforcing on-chain spending limits, additional-signer approval and delayed, cancellable withdrawals.</p>
                 <p>Validated the core policy flows on Sepolia through adversarial and invariant testing, then published the architecture and testing findings.</p>
                 <p>This remains an unaudited research prototype on a test network.</p>
+                <p class="project-full-stack"><strong>Full stack:</strong> Solidity, TypeScript, React, TanStack Query, React Hook Form, Zod, shadcn/ui, Tailwind CSS, Safe, Zodiac, Hardhat, viem.</p>
               </div>
             </details>
           </div>
@@ -248,12 +285,14 @@
           <span class="project-icon" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none"><circle cx="7" cy="16" r="3" /><circle cx="24" cy="8" r="3" /><circle cx="24" cy="24" r="3" /><path d="m10 15 11-6m-11 8 11 6M24 11v10" /></svg></span>
           <div class="project-content">
             <div class="project-heading"><h3 id="mosaic-title">Mosaic</h3><span class="project-status">ETHGlobal Circuit Breaker · Hackathon project · Feb 2024</span></div>
-            <p class="project-summary">A reputation system exploring how zero-knowledge proofs can validate trust relationships without revealing users’ connections.</p>
-            <p class="project-stack">Noir · Barretenberg · Solidity · TypeScript · Hardhat · viem</p>
+            <p class="project-summary">A hackathon prototype exploring private reputation through zero-knowledge proofs.</p>
+            <p class="project-stack">Noir · Barretenberg · Solidity · TypeScript</p>
             <details class="project-notes">
-              <summary>A closer look</summary>
+              <summary>Details &amp; tech stack</summary>
               <div class="notes-body">
-                <p>The hackathon proof of concept kept the underlying social graph private while proving the relationships needed by the reputation system.</p>
+                <p>Explored a reputation system that could validate trust relationships without revealing users’ connections. The proof of concept kept the underlying social graph private while proving the relationships needed by the reputation system.</p>
+                <p>Built during <a href="https://ethglobal.com/events/circuitbreaker">ETHGlobal Circuit Breaker</a> in February 2024. This was exploratory ZK work outside my professional roles.</p>
+                <p class="project-full-stack"><strong>Full stack:</strong> Noir, Barretenberg, Solidity, TypeScript, Hardhat, viem.</p>
               </div>
             </details>
           </div>
@@ -266,22 +305,29 @@
           <span class="project-icon" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none"><path d="M25 13A10 10 0 0 0 8 8L4 12m0-7v7h7M7 19a10 10 0 0 0 17 5l4-4m0 7v-7h-7" /></svg></span>
           <div class="project-content">
             <div class="project-heading"><h3 id="task-cycle-title">Task Cycle</h3><span class="project-status">Personal project</span></div>
-            <p class="project-summary">Recurring chores that follow real life. The clock restarts when you actually finish a task.</p>
+            <p class="project-summary">Recurring chores scheduled from when you actually finish them.</p>
             <p class="project-stack">React · TypeScript · Capacitor · PWA</p>
             <details class="project-notes">
-              <summary>A closer look</summary>
+              <summary>Details &amp; tech stack</summary>
               <div class="notes-body">
                 <p>Finish a three-day chore on Tuesday and it’s due on Friday. Finish it late on Sunday and the next date moves to Wednesday. Editing a completion in your history updates the schedule too.</p>
                 <p>Tasks stay on the device. The app includes native reminders, import and export, and Portuguese and English interfaces.</p>
+                <p class="project-full-stack"><strong>Full stack:</strong> React, TypeScript, Capacitor, PWA.</p>
               </div>
             </details>
           </div>
         </article>
       </section>
 
+      <section class="education" aria-labelledby="education-title">
+        <div class="section-heading"><h2 id="education-title">Education</h2></div>
+        <p>Bachelor’s in Computer Science — Software Engineering</p>
+        <p class="education-details">Instituto Superior de Engenharia de Coimbra · Sep 2014 – Sep 2017</p>
+      </section>
+
       <footer class="footer" id="contact">
         <div><p class="footer-invitation">Have something in mind? <a href="mailto:blvieira5@gmail.com">Let’s talk <span aria-hidden="true">↗</span></a></p><p>Open to full-stack/backend roles · remote · UTC−4 to UTC+2.</p></div>
-        <div class="footer-corner"><p>a small corner of the web.</p></div>
+        <div class="footer-corner"><p><a href="cv/bernardo-vieira.pdf" download="Bernardo_Vieira_CV.pdf" type="application/pdf">Download my CV (PDF) <span aria-hidden="true">↓</span></a></p><p>a small corner of the web.</p></div>
       </footer>
     </main>
   </body>
