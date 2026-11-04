@@ -12,6 +12,52 @@ export function getNextMilestoneIndex(current, key, length) {
   return current;
 }
 
+const resizeTiming = { duration: 240, easing: 'cubic-bezier(0.22, 1, 0.36, 1)' };
+
+function initializeDetails(reducedMotion) {
+  document.querySelectorAll('.career-notes, .project-notes').forEach((details) => {
+    const summary = details.querySelector('summary');
+    const body = document.createElement('div');
+    body.className = 'details-body';
+    while (summary.nextSibling) body.append(summary.nextSibling);
+    details.append(body);
+    let animation = null;
+    let targetOpen = null;
+
+    summary.addEventListener('click', (event) => {
+      event.preventDefault();
+      const open = !(targetOpen ?? details.open);
+      const from = details.open ? body.getBoundingClientRect().height : 0;
+      const opacity = details.open ? getComputedStyle(body).opacity : 0;
+      animation?.cancel();
+      targetOpen = open;
+      body.inert = !open;
+
+      if (reducedMotion.matches) {
+        details.open = open;
+        animation = null;
+        targetOpen = null;
+        return;
+      }
+
+      // Keep native details open until the closing animation has finished.
+      details.open = true;
+      const to = open ? body.getBoundingClientRect().height : 0;
+      const next = body.animate([
+        { height: `${from}px`, opacity },
+        { height: `${to}px`, opacity: open ? 1 : 0 },
+      ], resizeTiming);
+      animation = next;
+      next.finished.then(() => {
+        if (animation !== next) return;
+        details.open = open;
+        animation = null;
+        targetOpen = null;
+      }, () => {});
+    });
+  });
+}
+
 function initializeTimeline() {
   const timeline = document.querySelector('[data-timeline]');
   if (!timeline) return;
@@ -21,11 +67,19 @@ function initializeTimeline() {
   const panels = buttons.map((button) => document.getElementById(button.getAttribute('aria-controls')));
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
   const mobileLayout = window.matchMedia('(max-width: 700px)');
+  const stage = document.createElement('div');
+  stage.className = 'career-stage';
+  panels.forEach((panel) => stage.append(panel));
+  timeline.append(stage);
   const keyboardKeys = new Set(['Home', 'End', 'ArrowRight', 'ArrowDown', 'ArrowLeft', 'ArrowUp']);
   let activeIndex = Math.max(0, stops.findIndex((stop) => stop.hasAttribute('data-initial')));
   let frame = 0;
+  let resizeAnimation = null;
 
   function selectMilestone(index) {
+    if (index === activeIndex) return;
+    const from = stage.getBoundingClientRect().height;
+    resizeAnimation?.cancel();
     activeIndex = index;
 
     buttons.forEach((button, current) => {
@@ -34,6 +88,13 @@ function initializeTimeline() {
       panels[current].hidden = !selected;
       panels[current].inert = !selected;
     });
+    const to = panels[index].getBoundingClientRect().height;
+    if (!reducedMotion.matches && Math.abs(from - to) > 1) {
+      resizeAnimation = stage.animate([
+        { height: `${from}px` },
+        { height: `${to}px` },
+      ], resizeTiming);
+    }
     requestUpdate();
   }
 
@@ -71,15 +132,29 @@ function initializeTimeline() {
     panels[index].inert = index !== activeIndex;
   });
   timeline.classList.add('is-enhanced');
+  initializeDetails(reducedMotion);
+
+  function finishResizing() {
+    resizeAnimation?.finish();
+    document.querySelectorAll('.details-body').forEach((body) => {
+      body.getAnimations().forEach((animation) => animation.finish());
+    });
+  }
 
   window.addEventListener('scroll', () => {
     if (!reducedMotion.matches) requestUpdate();
   }, { passive: true });
-  window.addEventListener('resize', requestUpdate);
+  window.addEventListener('resize', () => {
+    finishResizing();
+    requestUpdate();
+  });
   reducedMotion.addEventListener('change', () => {
     if (frame) window.cancelAnimationFrame(frame);
     frame = 0;
-    if (reducedMotion.matches) timeline.style.removeProperty('--scroll-progress');
+    if (reducedMotion.matches) {
+      finishResizing();
+      timeline.style.removeProperty('--scroll-progress');
+    }
     requestUpdate();
   });
   new ResizeObserver(requestUpdate).observe(timeline);

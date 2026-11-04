@@ -61,6 +61,11 @@ async function panelContent(id) {
   };
 }
 
+async function settleAnimations(locator) {
+  await locator.evaluate((element) => Promise.allSettled(
+    element.getAnimations({ subtree: true }).map((animation) => animation.finished)));
+}
+
 test('experience presents CV-backed outcomes, sources and role-specific stacks', async () => {
   const gnosis = await panelContent('#gnosis-panel');
   assert.equal(gnosis.date, 'Aug 2024 – Sep 2026');
@@ -240,6 +245,7 @@ test('experience shows only main technologies until its details are expanded', a
     await details.locator('summary').press('Enter');
     assert.equal(await full.isVisible(), true);
     await details.locator('summary').press('Space');
+    await settleAnimations(details);
     assert.equal(await full.isVisible(), false);
   }
 });
@@ -256,6 +262,7 @@ test('project summaries stay short and details expand by keyboard', async () => 
     await summary.press('Enter');
     assert.equal(await details.locator('.project-full-stack').isVisible(), true);
     await summary.press('Space');
+    await settleAnimations(details);
     assert.equal(await details.locator('.project-full-stack').isVisible(), false);
   }
 });
@@ -310,12 +317,12 @@ test('timeline keyboard and reduced-motion behavior remains accessible', async (
   await page.emulateMedia({ reducedMotion: 'no-preference' });
 });
 
-test('switching career entries keeps the navigation and following content in place', async () => {
+test('career entries fit their content while their navigation stays in place', async () => {
   for (const width of [320, 390, 700, 701, 900, 1440]) {
     await page.setViewportSize({ width, height: 844 });
     await page.goto(siteUrl, { waitUntil: 'networkidle' });
     const positions = () => page.evaluate(() =>
-      [...document.querySelectorAll('.milestone, #skills')].map((element) => {
+      [...document.querySelectorAll('.milestone')].map((element) => {
         const bounds = element.getBoundingClientRect();
         return { x: bounds.left, y: bounds.top + scrollY };
       }));
@@ -323,12 +330,88 @@ test('switching career entries keeps the navigation and following content in pla
     for (const role of ['now', 'now', 'impactmarket', 'tech-hq', 'gnosis']) {
       await page.locator(`#${role}-trigger`).click();
       assert.deepEqual(await positions(), initial, `Layout moved during the fade at ${width}px`);
-      await page.locator('.career-panel').evaluateAll((panels) => Promise.allSettled(
-        panels.flatMap((panel) => panel.getAnimations().map((animation) => animation.finished))));
+      await settleAnimations(page.locator('[data-timeline]'));
       assert.deepEqual(await positions(), initial, `Layout moved at ${width}px when selecting ${role}`);
       assert.equal(await page.locator('.career-panel:visible').count(), 1);
       assert.equal(await page.locator(`#${role}-panel`).isVisible(), true);
+      const emptySpace = await page.locator(`#${role}-panel`).evaluate((panel) => {
+        const contentBottom = Math.max(...[...panel.children].map((child) => child.getBoundingClientRect().bottom));
+        return panel.getBoundingClientRect().bottom - contentBottom - parseFloat(getComputedStyle(panel).paddingBottom) - 1;
+      });
+      assert.ok(Math.abs(emptySpace) < 1, `Unused space under ${role} at ${width}px: ${emptySpace}px`);
     }
+  }
+});
+
+test('switching from a tall career entry to a short one smoothly resizes the panel', async () => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto(siteUrl, { waitUntil: 'networkidle' });
+  const heights = await page.evaluate(() => {
+    const timeline = document.querySelector('[data-timeline]');
+    const initial = timeline.getBoundingClientRect().height;
+    document.querySelector('#now-trigger').click();
+    const resize = timeline.getAnimations({ subtree: true }).find((animation) =>
+      animation.effect.getKeyframes().some((frame) => frame.height !== undefined));
+    if (!resize) return null;
+    resize.pause();
+    const duration = resize.effect.getTiming().duration;
+    resize.currentTime = duration / 4;
+    const early = timeline.getBoundingClientRect().height;
+    resize.currentTime = duration * 3 / 4;
+    const late = timeline.getBoundingClientRect().height;
+    resize.finish();
+    const final = timeline.getBoundingClientRect().height;
+    return { initial, early, late, final };
+  });
+  assert.ok(heights, 'Expected a height animation when switching entries');
+  assert.ok(heights.initial > heights.early && heights.early > heights.late && heights.late > heights.final, JSON.stringify(heights));
+});
+
+test('career and project details animate open and closed, including rapid reversals', async () => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto(siteUrl, { waitUntil: 'networkidle' });
+  for (const selector of ['#gnosis-panel .career-notes', '#kettigo .project-notes']) {
+    const details = page.locator(selector);
+    const opening = await details.evaluate((element) => {
+      const closedHeight = element.getBoundingClientRect().height;
+      element.querySelector('summary').click();
+      const resize = element.getAnimations({ subtree: true }).find((animation) =>
+        animation.effect.getKeyframes().some((frame) => frame.height !== undefined));
+      if (!resize) return null;
+      resize.pause();
+      resize.currentTime = resize.effect.getTiming().duration / 2;
+      const intermediate = element.getBoundingClientRect().height;
+      resize.finish();
+      return { closedHeight, intermediate, expanded: element.getBoundingClientRect().height };
+    });
+    assert.ok(opening, `No opening animation for ${selector}`);
+    assert.ok(opening.closedHeight < opening.intermediate && opening.intermediate < opening.expanded);
+    await settleAnimations(details);
+    const closing = await details.evaluate((element) => {
+      element.querySelector('summary').click();
+      const resize = element.getAnimations({ subtree: true }).find((animation) =>
+        animation.effect.getKeyframes().some((frame) => frame.height !== undefined));
+      if (!resize) return null;
+      resize.pause();
+      resize.currentTime = resize.effect.getTiming().duration / 2;
+      const height = element.getBoundingClientRect().height;
+      resize.finish();
+      return height;
+    });
+    assert.ok(closing > opening.closedHeight && closing < opening.expanded, `No intermediate closing height for ${selector}`);
+    await settleAnimations(details);
+    assert.equal(await details.getAttribute('open'), null);
+    await details.evaluate((element) => {
+      const summary = element.querySelector('summary');
+      summary.click(); summary.click(); summary.click();
+    });
+    await settleAnimations(details);
+    assert.equal(await details.evaluate((element) => element.open), true);
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await details.locator('summary').click();
+    assert.equal(await details.getAttribute('open'), null);
+    assert.equal(await details.evaluate((element) => element.getAnimations({ subtree: true }).length), 0);
+    await page.emulateMedia({ reducedMotion: 'no-preference' });
   }
 });
 

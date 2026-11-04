@@ -151,20 +151,26 @@ h1 {
 }
 .rail-fill { position: absolute; inset: 0; background: var(--accent); transform: scaleX(var(--scroll-progress, 0)); transform-origin: left; }
 .rail-pulse { position: absolute; top: -3px; left: calc(var(--scroll-progress, 0) * 100%); width: 7px; height: 7px; margin-left: -3px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 4px #dbe6d799; }
-.is-enhanced .career-panel {
+.career-stage {
+  position: relative;
   grid-column: 1 / -1;
   grid-row: 2;
-  align-self: stretch;
+  min-width: 0;
+  overflow: clip;
+  border-radius: 5px;
+}
+.is-enhanced .career-panel {
   align-content: start;
   min-width: 0;
   opacity: 1;
   visibility: visible;
   transition: opacity 180ms ease, visibility 0s;
 }
-/* Stack every entry in the same grid cell so the tallest reserves the space.
-   Visibility and inert keep inactive entries out of navigation and reading. */
+/* Inactive entries can fade out without contributing to the panel's height. */
 .is-enhanced .career-panel[hidden] {
   display: grid !important;
+  position: absolute;
+  inset: 0 0 auto;
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
@@ -206,6 +212,7 @@ h1 {
 .career-notes { grid-column: 1 / -1; padding-top: 12px; border-top: 1px dashed var(--line); }
 .career-notes summary, .project-notes summary { width: fit-content; color: var(--muted); cursor: pointer; font-size: 11px; padding: 5px 0; }
 .career-notes p { max-width: 820px; }
+.details-body { display: flow-root; overflow: clip; }
 .career-evidence { grid-column: 1 / -1; padding-top: 14px; border-top: 1px dashed var(--line); }
 .career-evidence > .small-label { margin-bottom: 10px; }
 .evidence-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 260px)); gap: 12px; }
@@ -296,13 +303,13 @@ h1 {
   .timeline { margin-top: 29px; }
   .timeline.is-enhanced { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 16px; }
   .is-enhanced .milestone { padding: 0 10px 4px 28px; min-height: 63px; }
-  .is-enhanced .timeline-stop:nth-last-child(-n + 2) .milestone { grid-row: 2; }
+  .is-enhanced .timeline-stop:nth-child(n + 4) .milestone { grid-row: 2; }
   .is-enhanced .milestone-dot { position: absolute; top: 20px; left: 0; width: 15px; height: 15px; margin: 0; }
   .milestone-name { font-size: 13px; }
   .is-enhanced .milestone-index { display: block; font-size: 10px; line-height: 1.5; }
   .milestone-caption { font-size: 11px; margin-top: 3px; }
   .is-enhanced .timeline-rail { display: none; }
-  .is-enhanced .career-panel { grid-row: 3; }
+  .career-stage { grid-row: 3; }
   .career-panel { grid-template-columns: minmax(0, 1fr); padding: 20px 18px; gap: 20px; }
   .career-main { display: block; }
   .career-icon { float: right; margin: 2px 0 12px 10px; width: 42px; height: 46px; }
