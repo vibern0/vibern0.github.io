@@ -245,11 +245,24 @@ test('project summaries stay short and details expand by keyboard', async () => 
   }
 });
 
-test('skills and education include the newly confirmed experience', async () => {
+test('skills expand by keyboard and retain the confirmed experience', async () => {
+  await page.goto(siteUrl, { waitUntil: 'networkidle' });
+  const details = page.locator('#skills details');
+  const grid = details.locator('.skills-grid');
+  const summary = details.locator('summary');
+  assert.equal(await grid.isVisible(), false);
+  const collapsedTop = await page.locator('#projects').evaluate((element) => element.getBoundingClientRect().top + scrollY);
+  await summary.focus();
+  await summary.press('Enter');
+  assert.equal(await grid.isVisible(), true);
+  const expandedTop = await page.locator('#projects').evaluate((element) => element.getBoundingClientRect().top + scrollY);
+  assert.ok(expandedTop > collapsedTop + 100);
   const skills = await page.locator('#skills').textContent();
   for (const keyword of ['App Router', 'Server Components', 'Prismic', 'gRPC', 'WebSockets', 'message queues', 'Sequelize', 'Vitest', 'Playwright', 'Claude', 'Codex']) {
     assert.ok(skills.includes(keyword), keyword);
   }
+  await summary.press('Space');
+  assert.equal(await grid.isVisible(), false);
   assert.match(await page.locator('.education').textContent(), /Instituto Superior de Engenharia de Coimbra/);
 });
 
@@ -296,6 +309,10 @@ test('experience and evidence remain available without JavaScript', async () => 
   assert.equal(await experienceNotes.locator('.career-full-stack').isVisible(), false);
   await experienceNotes.locator('summary').click();
   assert.equal(await experienceNotes.locator('.career-full-stack').isVisible(), true);
+  const skills = plain.locator('#skills .skills-grid');
+  assert.equal(await skills.isVisible(), false);
+  await plain.locator('#skills summary').click();
+  assert.equal(await skills.isVisible(), true);
   const dimensions = await plain.evaluate(() => ({ viewport: innerWidth, content: document.documentElement.scrollWidth }));
   assert.ok(dimensions.content <= dimensions.viewport);
   await noScript.close();

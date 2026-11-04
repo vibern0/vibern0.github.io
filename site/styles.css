@@ -198,6 +198,11 @@ h1 {
 .timeline-hint span { padding-right: 7px; }
 
 .skills { margin-top: 48px; padding-top: 23px; border-top: 1px solid var(--line); }
+.skills-details > summary { min-height: 44px; align-items: center; cursor: pointer; list-style: none; }
+.skills-details > summary::-webkit-details-marker { display: none; }
+.skills-details > summary::after { content: "+"; color: var(--accent); font-size: 18px; }
+.skills-details[open] > summary::after { content: "−"; }
+.skills-intro { margin: 12px 0 0; font-size: 11px; color: var(--muted); }
 .skills-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px 40px; margin: 24px 0 0; }
 .skills-grid > div { min-width: 0; }
 .skills-grid dt { font-size: 11px; font-weight: 600; }
