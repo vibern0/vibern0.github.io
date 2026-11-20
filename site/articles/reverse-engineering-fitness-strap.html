@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#f1f4ee">
+    <meta name="author" content="Bernardo Vieira">
+    <meta name="description" content="How I reconstructed a fitness strap's SpO₂ processing path from BLE packets and archived firmware, then validated a compatible implementation against executable code.">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Reverse-engineering a fitness strap, from BLE packets to calibrated SpO₂">
+    <meta property="og:description" content="Tracing a fitness strap's optical data from BLE packets through signal processing, calibration and quality checks.">
+    <title>Reverse-engineering a fitness strap — Bernardo Vieira</title>
+    <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+    <link rel="stylesheet" href="../styles.css?v=20261104-3">
+    <link rel="stylesheet" href="../article.css?v=20261120-1">
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to article</a>
+    <div class="page article-page">
+      <header class="masthead">
+        <a class="home-link" href="../" aria-label="vibern home">vibern <span>/ home</span></a>
+        <span class="location">Porto, Portugal <span aria-hidden="true">✳</span></span>
+      </header>
+
+      <main id="main">
+        <article class="article" aria-labelledby="article-title">
+          <header class="article-header">
+            <p class="article-meta">Engineering notes <span aria-hidden="true">/</span> <time datetime="2026-11-20">20 Nov 2026</time></p>
+            <h1 id="article-title">Reverse-engineering a fitness strap, from BLE packets to calibrated <span class="article-nowrap">SpO₂</span></h1>
+            <p class="article-author">By Bernardo Vieira</p>
+          </header>
+
+          <aside class="article-notice" aria-label="Research disclaimer">
+            <strong>Research purposes only.</strong> This documents experimental reverse engineering and software validation. The results have not been clinically validated and must not be used for diagnosis, treatment or other medical decisions. Matching firmware calculations does not establish physiological accuracy.
+          </aside>
+
+          <section aria-labelledby="the-missing-chain">
+            <h2 id="the-missing-chain">The missing chain</h2>
+            <p>Knowing the optical chip inside a fitness strap is useful, but it does not explain what the firmware does with its samples: how it packages them, identifies wavelengths, adjusts gain, rejects motion or calculates oxygen saturation.</p>
+            <p>I reconstructed that chain from <strong>BLE frames → optical channels → physical units → signal processing → calibration → quality-qualified results</strong>.</p>
+            <p>Community reverse-engineering projects had already documented BLE framing, commands, parts of the raw-record layout and an archived firmware image. The optical front end had also been identified as the <a href="https://www.analog.com/media/en/technical-documentation/data-sheets/MAX86171.pdf">MAX86171</a>, which has two acquisition channels and a native FIFO word consisting of a four-bit tag and signed 20-bit sample. Those sources gave me constraints, not answers: the application firmware could still reorder samples, alter settings between exposures and process values before transmission.</p>
+          </section>
+
+          <section aria-labelledby="start-with-the-recordings">
+            <h2 id="start-with-the-recordings">Start with the recordings</h2>
+            <p>Before calculating anything, I needed to establish what the recordings actually contained. Could fragmented BLE notifications be reassembled into complete frames? Were values signed, packed or interleaved? Which containers held red and infrared samples? Did their headers describe physical settings or register codes? And, most importantly, was the desired signal present at all?</p>
+            <p>My first captures contained green, background-infrared and ambient values, but <strong>empty red and main-infrared containers</strong>. A configured LED current does not prove an exposure occurred, so there was no honest way to manufacture the missing measurements.</p>
+            <p>After removing one duplicate, I had seven unique captures: 1,014 records of raw type R10 and 1,013 of R11. All 2,507 logged inbound frames passed length and CRC checks, and reassembling notification fragments reproduced the recorded frames. Across 304,000 populated optical values, every sample obeyed:</p>
+            <pre><code>int32_value == sign_extend(low_20_bits)</code></pre>
+            <p>The observed values stayed within <code>−524288 … 524287</code>. The strap transmitted little-endian <code>int32</code> values in separate receiver arrays, not untouched three-byte FIFO words. I also found bytes beyond declared frame boundaries that matched checksum words left behind by another record type in a shared transmit buffer. Reading the whole notification buffer as payload would have invented fields.</p>
+            <p>That transport validation established that the bytes survived recording. It did not establish signal quality.</p>
+          </section>
+
+          <section aria-labelledby="mapping-the-firmware">
+            <h2 id="mapping-the-firmware">Following firmware to the wire</h2>
+            <p>I traced record builders backwards through channel-selection tables, configuration structures and diagnostic getters. For the firmware I inspected, that recovered this mapping:</p>
+            <div class="article-table-wrap">
+              <table>
+                <thead><tr><th>Container</th><th>Header offset</th><th>Exposure</th><th>Native ID</th></tr></thead>
+                <tbody>
+                  <tr><td>R11 slot 0</td><td>13</td><td>Green</td><td>1</td></tr>
+                  <tr><td>R11 slot 1</td><td>438</td><td>Red</td><td>2</td></tr>
+                  <tr><td>R11 slot 2</td><td>863</td><td>Main infrared</td><td>4</td></tr>
+                  <tr><td>R11 slot 3</td><td>1288</td><td>Background infrared</td><td>5</td></tr>
+                  <tr><td>R10 optical tail</td><td>1491</td><td>Ambient</td><td>6</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <p>Offsets are into the type-inclusive inner payload, represented in my decoder as <code>frame[4:-4]</code>. Slot numbers and native channel IDs are different namespaces.</p>
+            <p>Each optical descriptor is 25 bytes long. Serializer arithmetic and diagnostic getters, rather than plausible-looking values, established the units: LED currents are encoded in 10 µA, receiver ADC ranges in µA, and receiver offsets in 10 nA. A current of <code>12750</code> therefore means 127.5 mA; an offset of <code>800</code> means 8,000 nA.</p>
+            <p>There were traps in the resemblance between records. Bytes 11 and 18 repeat LED selectors in R11, but identify photodiode selectors in R10. Likewise, a sample count of 50 is not enough to infer a 50 Hz sampling rate.</p>
+          </section>
+
+          <section aria-labelledby="acquisition-is-a-transaction">
+            <h2 id="acquisition-is-a-transaction">Acquisition is a transaction</h2>
+            <p>Raw streaming and optical acquisition turned out to be separate controls. Command 63 enabled record delivery, while red and main infrared required native IDs 2 and 4 to be enabled through configuration parameter 13.</p>
+            <p>The harder part was undoing that safely. The configuration setter cleared global automatic gain control (AGC). Restoring the channel-enable flags alone left AGC disabled, so I deferred acquisition until I could restore every setting and verify the result:</p>
+            <pre><code>stop raw delivery
+→ restore and verify channel flags
+→ restore AGC last
+→ verify AGC
+→ restore normal communication mode
+→ verify normal recording resumes</code></pre>
+            <p>I restored AGC through console command <code>g a 1</code>, followed by a recognised <code>g s</code> readback. Other problems included a stale GATT table and an aligned CRC read that needed trailing packet padding. The resulting implementation treats acquisition as a transaction: journal state before mutation, give one component exclusive command ownership and retain recovery state until cleanup is verified.</p>
+          </section>
+
+          <section aria-labelledby="recovering-the-algorithm">
+            <h2 id="recovering-the-algorithm">Recovering the calculation</h2>
+            <p>In the public firmware image, I located the signal-processing entry at file offset <code>0x086A08</code>, with initialisation at <code>0x0869B0</code> and virtual-address base <code>0x10028000</code>. Before filtering, the receiver samples are reconstructed approximately as:</p>
+            <pre><code>photocurrent_µA = raw × ADC_range_µA / 524288
+                 + prior_offset_nA / 1000
+
+normalizer = prior_LED_sum_mA × 0.99^table_index
+             / 11.000000953674316
+
+color = mean(receiver_A / normalizer,
+             receiver_B / normalizer)</code></pre>
+            <p>Configuration history matters here: the current ADC range must remain paired with the preceding normalisation settings. A convenient header cannot replace that history.</p>
+            <p>The firmware expands 50 values into 100, placing doubled inputs in even positions and zeros in odd positions; runs persistent biquad filters; averages four successive block means for DC; and derives AC from adaptive peak detection over a 400-sample history. AC is <strong>not</strong> RMS or standard deviation.</p>
+            <p>The recovered calibration is:</p>
+            <pre><code>R = abs(DC_IR) × AC_RED / (abs(DC_RED) × AC_IR)
+
+SpO₂_candidate =
+    roundf(fma(−18.899499893188477, R, 110.64459991455078))</code></pre>
+            <p>The coefficients come directly from firmware; I did not fit them to recordings or substitute a generic curve. The port preserves single-precision arithmetic, fused-operation behaviour and rounding ties away from zero, because algebraically equivalent floating-point expressions can diverge.</p>
+          </section>
+
+          <section aria-labelledby="rejection-is-a-result">
+            <h2 id="rejection-is-a-result">Rejection is a result</h2>
+            <p>The routine’s floating-point output is <strong>R</strong>, not SpO₂. Its integer return may be a percentage or a rejection code. I mapped these diagnostic bits:</p>
+            <div class="article-table-wrap">
+              <table>
+                <thead><tr><th>Bit</th><th>Condition</th></tr></thead>
+                <tbody>
+                  <tr><td>4</td><td>Settings or status transition and cooldown</td></tr>
+                  <tr><td>8</td><td>Excess motion</td></tr>
+                  <tr><td>16</td><td>Missing detected intervals</td></tr>
+                  <tr><td>32</td><td>Red peak-shape failure</td></tr>
+                  <tr><td>128</td><td>Infrared peak-shape failure</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <p>I also recovered an R10 motion field at inner bytes <code>[42:46]</code>: a little-endian float representing the maximum adjacent change in calibrated acceleration-vector magnitude. The oxygen routine uses the maximum across 30 blocks, including the current one, and rejects motion above <code>0.03f g</code>. One movement can therefore invalidate many subsequent quiet blocks.</p>
+            <p>Numerical candidates outside 70–100 become status codes rather than clamped percentages. A special path can even return 98 with <code>R = 0</code>. Accepting the integer alone would manufacture a measurement.</p>
+          </section>
+
+          <section aria-labelledby="firmware-as-oracle">
+            <h2 id="firmware-as-oracle">Firmware as an oracle</h2>
+            <p>I executed the original ARM instructions in a Cortex-M emulator and used them as an oracle for my Kotlin implementation. Across 458 tested calls, the port matched bit-for-bit on the raw return value and ratio, five diagnostic flags, and four AC/DC outputs. The cases included synthetic inputs and 188 recorded active blocks. I also replayed complete frames to test decoding, pairing, normalisation and state handling.</p>
+            <p>Real recordings showed why rejection logic mattered:</p>
+            <div class="article-table-wrap">
+              <table>
+                <thead><tr><th>Recording</th><th>Active blocks</th><th>Accepted</th><th>Offline median</th></tr></thead>
+                <tbody>
+                  <tr><td>First complete attempt</td><td>94</td><td>0</td><td>Unavailable</td></tr>
+                  <tr><td>Still-wrist repeat</td><td>94</td><td>13</td><td>96%</td></tr>
+                  <tr><td>Further repeat</td><td>94</td><td>84</td><td>94%</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <p>The first attempt’s longest quiet sequence was only 17 blocks. I repeated the acquisition rather than weakening the motion threshold. The later 96% versus 94% difference was numerically explainable: red AC/DC increased relative to infrared AC/DC, raising R under the unchanged calibration. I could not establish its physical cause; contact, perfusion and optical coupling were not independently measured.</p>
+          </section>
+
+          <section aria-labelledby="what-it-proves">
+            <h2 id="what-it-proves">What this proves—and what it does not</h2>
+            <p>I recovered a reproducible acquisition path, channel mapping, physical units, calibration and quality logic, then validated compatible software against executable archived firmware. That establishes implementation fidelity for the tested cases.</p>
+            <p>It does not establish physiological accuracy, complete equivalence with a newer installed firmware, or equivalence between an awake spot check and a nightly measurement. The useful engineering result is a traceable chain of evidence—and a decoder that can report <strong>unavailable</strong> when that chain is incomplete.</p>
+          </section>
+
+          <footer class="article-footer">
+            <a href="../"><span aria-hidden="true">←</span> Back home</a>
+            <a href="mailto:blvieira5@gmail.com">Get in touch <span aria-hidden="true">↗</span></a>
+          </footer>
+        </article>
+      </main>
+    </div>
+  </body>
+</html>

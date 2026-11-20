@@ -47,6 +47,32 @@
 .article strong { font-weight: 650; }
 .article-nowrap { white-space: nowrap; }
 .article code { font-family: inherit; font-size: .95em; white-space: nowrap; }
+.article pre {
+  overflow-x: auto;
+  margin: 24px 0;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: var(--surface);
+  font: inherit;
+  font-size: .9em;
+  line-height: 1.7;
+}
+.article pre code { white-space: pre; }
+.article-notice {
+  margin: 0 0 32px;
+  padding: 16px 18px;
+  border-left: 2px solid var(--accent);
+  background: var(--surface);
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.8;
+}
+.article-notice strong { color: var(--text); }
+.article-table-wrap { overflow-x: auto; margin: 24px 0; }
+.article table { width: 100%; border-collapse: collapse; font-size: .9em; }
+.article th, .article td { padding: 10px 12px; border: 1px solid var(--line); text-align: left; vertical-align: top; }
+.article th { background: var(--surface); font-weight: 650; }
 
 .article-tiers {
   margin: 24px 0;
